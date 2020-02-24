@@ -1,7 +1,7 @@
 // import module
-const bycript = require('bcryptjs')
-const validation = require('../helpers/validation')
-const jwt = require('../helpers/jwt')
+// const bycript = require('bcryptjs')
+// const validation = require('../helpers/validation')
+// const jwt = require('../helpers/jwt')
 
 // setup connection
 const database = require('../database')
@@ -35,6 +35,20 @@ module.exports = {
             const result = await connection.databaseQuery(query, 'user')
 
             // send result to client-side
+            res.status(200).send(result)
+        })
+    },
+    // get roles
+    getRoles : async (req, res) => {
+        await connection.databaseQueryWithErrorHandle(res, async () => {
+            // do authorization
+            if(req.user.role !== 'superadmin') throw ({code : 401, msg : 'access denied.'})
+
+            // do query
+            const query = 'SELECT * FROM roles'
+            const result = await connection.databaseQuery(query)
+
+            // send feedback to client-side
             res.status(200).send(result)
         })
     },
@@ -81,5 +95,6 @@ module.exports = {
             // send feedback to client-side
             res.status(200).send('users had been deleted.')
         })
-    }
+    },
+
 }

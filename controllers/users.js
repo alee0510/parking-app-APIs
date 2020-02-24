@@ -122,7 +122,9 @@ module.exports = {
             // send feedback to client-side
             res.status(200).send('your account has been deleted.')
         })
-    }
+    },
+    // keep login
+    
 }
 
 // NOTE : validation input need to improved
