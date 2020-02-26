@@ -4,59 +4,63 @@ const fileSystem = require('fs')
 // setup connection
 const database = require('../database')
 const connection = require('../helpers/databaseQuery')(database)
+const DIRECTORY = '../public/profiles/'
 
 // export controllers
 module.exports = {
-    // add profile data : need user_id
-    addProfile : async (req, res) => {
-        console.log(req.file.path || 'image does\'t exist.')
-        await connection.databaseQueryWithErrorHandle(res, req.file, async () => {
-            // prepare profile data
-            let profile = JSON.parse(req.body.profile)
-
-            // check if image file exist => user avatar
-            if (req.file) profile.image = req.file.path.split('\\').splice(1).join('/')
-
-            // do query
-            const query = 'INSERT INTO users SET ? '
-            await connection.databaseQuery(query, profile)
-
-            // send feedback to client-side
-            res.status(200).send('profile added.')
-        })
-    },
-    // edit image profile : need user_id
-    editImage : async (req, res) => {
-        console.log(req.file.path || 'image does\'t exist.')
-        await connection.databaseQueryWithErrorHandle(res, req.file, async () => {
-            // prepare updated profile data
-            let profile = JSON.parse(req.body.profile)
-            let oldImage = profile.image
-
-            // check if image file exist
-            if (req.body.image) profile.image = req.file.path.split('\\').splice(1).join('/')
-
-            // do query
-            const update = 'UPDATE users SET ? WHERE user_id = ?'
-            await connection.databaseQuery(update, [profile, parseInt(profile.user_id)])
-
-            // delete old image file
-            fileSystem.unlinkSync(oldImage)
-
-            // send feedback to client-side
-            res.status(200).send('profile updated.')
-        })
-    },
-    // edit profile data
-    editProfile : async (req, res) => {
-        const id = parseInt(req.params.id)
+    // get user profile info by user id => NEED login authentication
+    getUserProfileByID : async (req, res) => {
         await connection.databaseQueryWithErrorHandle(res, async () => {
-            // do query
-            const query = 'UPDATE users SET ? WHERE id = ?'
-            await connection.databaseQuery(query, [req.body, id])
+            const query = 'SELECT * FROM profiles WHERE id = ?'
+            const result = await connection.databaseQuery(query, req.user.id)
 
             // send feedback to client-side
-            res.status(200).send('your data has been updated.')
+            res.status(200).send(result[0])
         })
     },
+    // add profile data => NEED login authentication
+    addUserProfile : async (req, res) => {
+        await connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'INSERT INTO profiles SET ?'
+            await connection.databaseQuery(query, req.body)
+
+            // send feeback to client-side
+            res.status(200).send('your profile has been added.')
+        })
+    },
+    // edit user profile : change user image or profile data, => NEED login authentication
+    editUserProfile : async (req, res) => {
+        await connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'UPDATE profiles SET ? WHERE id = ?'
+            await connection.databaseQuery(query, [req.body, req.user.id])
+            
+            // send feeback to client-side
+            res.status(200).send('your profile has been updated.')
+        })
+    },
+    uploadImageProfile : async(req, res) => {
+        await connection.databaseQueryWithErrorHandle(res, async () => {
+            // check image file from request
+            if (!req.file) throw ({code : 400, msg : 'image doesn\'t exist.'})
+
+            // check user image path in database
+            const getPath = 'SELECT * FROM profiles WHERE id = ?'
+            const result = await connection.databaseQuery(getPath, req.user.id)
+
+            // get image file path
+            const image = req.file.path.split('\\').splice(1).join('/')
+            
+            // do query update
+            const update = 'UPDATE profiles SET image = ? WHERE id = ?'
+            await connection.databaseQuery(update, [image, req.user.id])
+            
+            // check old profile image file in public folder => if exist delete it
+            if (result[0].image) fileSystem.unlinkSync(DIRECTORY + result[0].image)
+
+            // send feedback to client-side
+            res.status(200).send('image profile has been updated.')
+        })
+    }
 }
+
+// NOTE : image profile will add later after registration, in profile edit page

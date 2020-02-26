@@ -1,6 +1,5 @@
 // import module
 const bycript = require('bcryptjs')
-const jwt = require('../helpers/jwt')
 
 // setup connection
 const database = require('../database')
