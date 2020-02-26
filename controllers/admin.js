@@ -10,6 +10,7 @@ module.exports = {
             // do authorization
             if (req.user.role !== 1) throw ({code : 401, msg : 'access denied.'})
 
+            // do query
             const query = `SELECT us.id, us.username, us.email, pf.name, 
                             pf.birthdate, pf.phone, pf.address, us.role 
                             FROM users us
@@ -23,6 +24,10 @@ module.exports = {
     },
     getUserDataOnly : async (req, res) => {
         await connection.databaseQueryWithErrorHandle(res, async () => {
+            // do authorization
+            if (![1, 2].includes(req.user.role)) throw ({code : 401, msg : 'access denied.'})
+
+            // do query
             const query = `SELECT us.id, us.username, us.email, pf.name, 
                             pf.birthdate, pf.phone, pf.address, us.role 
                             FROM users us
