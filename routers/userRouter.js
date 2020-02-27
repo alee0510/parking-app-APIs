@@ -7,9 +7,7 @@ const { users } = require('../controllers')
 // apply our controllers
 router.post('/register', users.register)
 router.post('/login', users.login)
-router.patch('/edit/pass/:id', users.changePassword)
-router.patch('/edit/username/:id', users.editUsername)
-router.delete('/delete/:id', users.delete)
+router.get('/staylogin', users.stayLogin)
 
 // export our routers
 module.exports = router

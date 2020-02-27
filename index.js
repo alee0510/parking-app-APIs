@@ -20,7 +20,7 @@ const option = { exposedHeaders : 'Auth-Token' }
 // apply middleware
 app.use(cors(option))
 app.use(bodyParser.json())
-// app.use(urlLogger)
+app.use(urlLogger)
 
 // set public folder to save or access all assets
 app.use(express.static('public'))
@@ -38,8 +38,8 @@ app.get('/', (req, res) => {
 })
 
 // connect our router
-const { userRouter } = require('./routers')
-app.use('/api/users/', userRouter)
+const { adminRouter } = require('./routers')
+app.use('/api/admin/', adminRouter)
 
 console.log('secret token : ', process.env.SECRET_TOKEN)
 console.log('pass', process.env.PASS)
