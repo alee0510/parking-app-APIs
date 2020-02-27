@@ -38,8 +38,8 @@ app.get('/', (req, res) => {
 })
 
 // connect our router
-const { adminRouter } = require('./routers')
-app.use('/api/admin/', adminRouter)
+const { superAdminRouter } = require('./routers')
+app.use('/api/superadmin/', superAdminRouter)
 
 console.log('secret token : ', process.env.SECRET_TOKEN)
 console.log('pass', process.env.PASS)

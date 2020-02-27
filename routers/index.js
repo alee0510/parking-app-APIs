@@ -1,5 +1,5 @@
 // import routers
-const adminRouter = require('./adminRouter')
+const superAdminRouter = require('./superAdminRouter')
 
 // export our routers
-module.exports = { adminRouter }
+module.exports = { superAdminRouter }
