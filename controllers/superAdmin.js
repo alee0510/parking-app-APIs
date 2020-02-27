@@ -15,7 +15,6 @@ module.exports = {
 
         // do query
         await connection.databaseQueryWithErrorHandle(res, async () => {
-            // do query
             const getFirstData = `SELECT * FROM users 
                                 WHERE ${only}
                                 ORDER BY id DESC LIMIT ?`
@@ -36,7 +35,6 @@ module.exports = {
 
         // do query
         await connection.databaseQueryWithErrorHandle(res, async () => {
-            // do query
             const getNextData = `SELECT * FROM users 
                                 WHERE ${only} AND id < ?
                                 ORDER BY id DESC LIMIT ?`
@@ -57,7 +55,6 @@ module.exports = {
 
         // do query
         await connection.databaseQueryWithErrorHandle(res, async () => {
-            // do quer
             const getPrevData = `SELECT * FROM users
                                 WHERE ${only} AND id > ?
                                 ORDER BY id ASC LIMIT ?`
@@ -67,7 +64,75 @@ module.exports = {
             res.status(200).send(result)
         })
     },
-    // get user data only
+    // get user profile
+    paginationGetUserProfile : async (req, res) => {
+        console.log(req.query)
+        
+        // define exception
+        const on = parseInt(req.query.only || null)
+        const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
+        
+        // do query
+        await connection.databaseQueryWithErrorHandle(res, async () => {
+            const getProfileData = `SELECT pf.id, us.username, pf.name, 
+                                    pf.image, pf.birthdate, pf.phone, pf.address 
+                                    FROM users us
+                                    JOIN profiles pf ON us.id = pf.id
+                                    WHERE ${only}
+                                    ORDER BY pf.id DESC LIMIT ?`
+            const result = await connection.databaseQuery(getProfileData, parseInt(req.query.limit))
+
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
+    },
+    paginationGetUserProfileNext : async (req, res) => {
+        console.log(req.query)
+
+        // get and define execption
+        const id = parseInt(req.query.id)
+        const limit = parseInt(req.query.limit)
+        const on = parseInt(req.query.exception || null)
+        const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
+
+        // do query
+        await connection.databaseQueryWithErrorHandle(res, async () => {
+            const getNextProfileData = `SELECT pf.id, us.username, pf.name, 
+                                    pf.image, pf.birthdate, pf.phone, pf.address 
+                                    FROM users us
+                                    JOIN profiles pf ON us.id = pf.id
+                                    WHERE ${only} AND id < ?
+                                    ORDER BY pf.id DESC LIMIT ?`
+            const result = await connection.databaseQuery(getNextProfileData, [id, limit])
+
+            // send feeback to client-side
+            res.status(200).send(result)
+        })
+    },
+    paginationGetUserProfilePrev : async (req, res) => {
+        console.log(req.query)
+
+        // get and define execption
+        const id = parseInt(req.query.id)
+        const limit = parseInt(req.query.limit)
+        const on = parseInt(req.query.exception || null)
+        const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
+
+        // do query
+        await connection.databaseQueryWithErrorHandle(res, async () => {
+            const getPrevProfileData = `SELECT pf.id, us.username, pf.name, 
+                                    pf.image, pf.birthdate, pf.phone, pf.address 
+                                    FROM users us
+                                    JOIN profiles pf ON us.id = pf.id
+                                    WHERE ${only} AND id > ?
+                                    ORDER BY pf.id ASC LIMIT ?`
+            const result = await connection.databaseQuery(getPrevProfileData, [id, limit])
+
+            // send feeback to client-side
+            res.status(200).send(result)
+        })
+    },
+
 }
 
 /* NOTE : all superadmin features need authentication and authorization
