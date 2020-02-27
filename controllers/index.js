@@ -2,7 +2,7 @@
 const users = require('./users')
 const account = require('./account')
 const profile = require('./profile')
-const superAdmin = require('./superAdmin')
+const admin = require('./admin')
 
 // export controllers
-module.exports = { users, account, profile, superAdmin }
+module.exports = { users, account, profile, admin }
