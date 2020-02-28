@@ -10,7 +10,8 @@ module.exports = {
         console.log(req.query)
 
         // define exception
-        const on = parseInt(req.query.only || null)
+        const on = parseInt(req.query.only) || null
+        console.log(on)
         
         if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
@@ -33,7 +34,7 @@ module.exports = {
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
 
-        const on = parseInt(req.query.only || null)
+        const on = parseInt(req.query.only) || null
         if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
@@ -55,7 +56,7 @@ module.exports = {
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
 
-        const on = parseInt(req.query.only || null)
+        const on = parseInt(req.query.only) || null
         if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
@@ -75,7 +76,7 @@ module.exports = {
         console.log(req.query)
         
         // define exception
-        const on = parseInt(req.query.only || null)
+        const on = parseInt(req.query.only) || null
         if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
         
@@ -100,7 +101,7 @@ module.exports = {
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
 
-        const on = parseInt(req.query.only || null)
+        const on = parseInt(req.query.only) || null
         if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
@@ -125,7 +126,7 @@ module.exports = {
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
 
-        const on = parseInt(req.query.only || null)
+        const on = parseInt(req.query.only) || null
         if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
@@ -183,6 +184,17 @@ module.exports = {
 
             // send feedback to client-side
             res.status(200).send('user has been deleted.')
+        })
+    },
+    // get total user in database
+    getTotalUser : async (req, res) => {
+        await connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'SELECT COUNT(*) AS total FROM users USE INDEX(PRIMARY)'
+            const result = await connection.databaseQuery(query)
+
+            // send feedback to client-side
+            const total = result[0]['total']
+            res.status(200).send([total])
         })
     }
 
