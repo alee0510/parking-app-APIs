@@ -30,7 +30,7 @@ module.exports = {
         // get and define execption
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
-        const on = parseInt(req.query.exception || null)
+        const on = parseInt(req.query.only || null)
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
@@ -50,7 +50,7 @@ module.exports = {
         // get and define execption
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
-        const on = parseInt(req.query.exception || null)
+        const on = parseInt(req.query.only || null)
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
@@ -92,7 +92,7 @@ module.exports = {
         // get and define execption
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
-        const on = parseInt(req.query.exception || null)
+        const on = parseInt(req.query.only || null)
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
@@ -115,7 +115,7 @@ module.exports = {
         // get and define execption
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
-        const on = parseInt(req.query.exception || null)
+        const on = parseInt(req.query.only || null)
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
