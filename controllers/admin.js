@@ -143,6 +143,48 @@ module.exports = {
             res.status(200).send(result)
         })
     },
+    // superadmin feature : manage user's role
+    getUserRole : async (req, res) => {
+        await connection.databaseQueryWithErrorHandle(res, async () => {
+            const getRole = 'SELECT * FROM roles'
+            const result = await connection.databaseQuery(getRole)
+
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
+    },
+    editUserRole : async (req, res) => {
+        const id = parseInt(req.params.id)
+
+        // do query
+        await connection.databaseQueryWithErrorHandle(res, async () => {
+            const editRle = 'UPDATE users SET ? WHERE id = ?'
+            await connection.databaseQuery(editRle, [req.body, id])
+
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
+    },
+    // superadmin feature : manage user account
+    deletUser : async (req, res) => {
+        console.log(req.query)
+        const multiple = parseInt(req.query.multiple || 0) // value 0 or 1
+        const id = parseInt(req.query.id)
+
+        // do query
+        await connection.databaseQueryWithErrorHandle(res, async () => {
+            // define query
+            let query = 'DELETE FROM users WHERE id = ?'
+            if (multiple) query = `DELETE FROM users WEHERE id IN (${[...req.body.id]})`
+            
+            // do query
+            console.log(query)
+            await connection.databaseQuery(query, id || [])
+
+            // send feedback to client-side
+            res.status(200).send('user has been deleted.')
+        })
+    }
 
 }
 
@@ -152,3 +194,5 @@ superadmin features : access all users data and activity plus change user role
  - none : get all data including admin
  - 2 : gett admin data only, 
  - 3 : get user data only */
+
+// NOTE : for test purpose : authorization or authentication is temporray diasbled
