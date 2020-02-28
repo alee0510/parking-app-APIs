@@ -195,4 +195,4 @@ superadmin features : access all users data and activity plus change user role
  - 2 : gett admin data only, 
  - 3 : get user data only */
 
-// NOTE : for test purpose : authorization or authentication is temporray diasbled
+// NOTE : for test purpose : authorization or authentication is temporray disabled
