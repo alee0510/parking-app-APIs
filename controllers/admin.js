@@ -11,6 +11,8 @@ module.exports = {
 
         // define exception
         const on = parseInt(req.query.only || null)
+        
+        if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
@@ -30,7 +32,9 @@ module.exports = {
         // get and define execption
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
+
         const on = parseInt(req.query.only || null)
+        if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
@@ -50,7 +54,9 @@ module.exports = {
         // get and define execption
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
+
         const on = parseInt(req.query.only || null)
+        if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
@@ -70,6 +76,7 @@ module.exports = {
         
         // define exception
         const on = parseInt(req.query.only || null)
+        if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
         
         // do query
@@ -92,7 +99,9 @@ module.exports = {
         // get and define execption
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
+
         const on = parseInt(req.query.only || null)
+        if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
@@ -115,7 +124,9 @@ module.exports = {
         // get and define execption
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
+
         const on = parseInt(req.query.only || null)
+        if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
