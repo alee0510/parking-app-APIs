@@ -11,7 +11,7 @@ module.exports = {
 
         // define exception
         const on = parseInt(req.query.only) || null
-        console.log(on)
+        // console.log(on)
         
         if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
