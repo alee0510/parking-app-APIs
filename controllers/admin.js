@@ -78,7 +78,7 @@ module.exports = {
         // define exception
         const on = parseInt(req.query.only) || null
         if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
-        const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
+        const only = `us.role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
         
         // do query
         await connection.databaseQueryWithErrorHandle(res, async () => {
@@ -103,7 +103,7 @@ module.exports = {
 
         const on = parseInt(req.query.only) || null
         if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
-        const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
+        const only = `us.role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
         await connection.databaseQueryWithErrorHandle(res, async () => {
@@ -111,7 +111,7 @@ module.exports = {
                                     pf.image, pf.birthdate, pf.phone, pf.address 
                                     FROM users us
                                     JOIN profiles pf ON us.id = pf.id
-                                    WHERE ${only} AND id < ?
+                                    WHERE ${only} AND pf.id < ?
                                     ORDER BY pf.id DESC LIMIT ?`
             const result = await connection.databaseQuery(getNextProfileData, [id, limit])
 
@@ -128,7 +128,7 @@ module.exports = {
 
         const on = parseInt(req.query.only) || null
         if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
-        const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
+        const only = `us.role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
         await connection.databaseQueryWithErrorHandle(res, async () => {
@@ -136,7 +136,7 @@ module.exports = {
                                     pf.image, pf.birthdate, pf.phone, pf.address 
                                     FROM users us
                                     JOIN profiles pf ON us.id = pf.id
-                                    WHERE ${only} AND id > ?
+                                    WHERE ${only} AND pf.id > ?
                                     ORDER BY pf.id ASC LIMIT ?`
             const result = await connection.databaseQuery(getPrevProfileData, [id, limit])
 
