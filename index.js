@@ -38,9 +38,10 @@ app.get('/', (req, res) => {
 })
 
 // connect our router
-const { adminRouter, userRouter } = require('./routers')
+const { adminRouter, userRouter, profileRouter } = require('./routers')
 app.use('/api/admin/', adminRouter)
 app.use('/api/user/', userRouter)
+app.use('/api/user/', profileRouter)
 
 console.log('secret token : ', process.env.SECRET_TOKEN)
 console.log('pass', process.env.PASS)

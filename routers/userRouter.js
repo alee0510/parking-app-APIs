@@ -2,7 +2,7 @@
 const router = require('express').Router()
 
 // import verifier
-import { verify } from '../helpers/jwt'
+const { verify } = require ('../helpers/jwt')
 
 // import our controllers
 const { users } = require('../controllers')
@@ -10,7 +10,7 @@ const { users } = require('../controllers')
 // apply our controllers
 router.post('/register', users.register)
 router.post('/login', users.login)
-router.get('/staylogin', verify, users.stayLogin)
+router.post('/staylogin', verify, users.stayLogin)
 
 // export our routers
 module.exports = router

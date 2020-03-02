@@ -28,7 +28,7 @@ module.exports = {
 
             // send token to client-side
             const token = jwt.createToken({id : newUser.insertId})
-            res.header('Auth-Token', token).send('register success.')
+            res.header('Auth-Token', token).send({id : newUser.insertId})
         })
     },
     // login
@@ -48,7 +48,7 @@ module.exports = {
             const token = jwt.createToken({id, role, status})
 
             // send feedback (token) to client-side
-            res.header('Auth-Token', token).send('Welcome.')
+            res.header('Auth-Token', token).send(result[0])
         })
     },
     // keep login
