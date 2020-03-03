@@ -10,7 +10,7 @@ const { users } = require('../controllers')
 // apply our controllers
 router.post('/register', users.register)
 router.post('/login', users.login)
-router.post('/staylogin', verify, users.stayLogin)
+router.get('/staylogin', verify, users.stayLogin)
 
 // export our routers
 module.exports = router

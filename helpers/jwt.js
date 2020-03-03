@@ -11,7 +11,7 @@ module.exports = {
     verify : (req, res, next) => {
         // get token from request header
         const token = req.header('Auth-Token')
-        console.log('token', req.header('Auth-Token'))
+        // console.log('token', req.header('Auth-Token'))
         if (!token) return res.status(401).send('access denied.')
 
         try {
