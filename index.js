@@ -1,11 +1,11 @@
 // import module
 const express = require('express')
-const dotenv = require('dotenv')
+const dotenv = require('dotenv').config()
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const database = require('./database')
 
 // setup app framework
-dotenv.config()
 const app = express()
 
 // url logger middleware
@@ -14,19 +14,19 @@ const urlLogger = (req, res, next) => {
     next() // execute next middleware
 }
 
-// cors option
-const option = { exposedHeaders : 'Auth-Token' }
 
 // apply middleware
-app.use(cors(option))
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended : false }))
+// cors option
+const option = { exposedHeaders : 'Auth-Token', }
+app.use(cors(option))
 app.use(urlLogger)
 
 // set public folder to save or access all assets
 app.use(express.static('public'))
 
 // setup database
-const database = require('./database')
 database.connect(err => {
     if (err) return console.log('error connecting : ', err.stack)
     console.log('connected as id : ', database.threadId)

@@ -11,7 +11,8 @@ module.exports = {
     verify : (req, res, next) => {
         // get token from request header
         const token = req.header('Auth-Token')
-        if (!token) return res.status(401).send({msg : 'access denied . . .'})
+        console.log('token', req.header('Auth-Token'))
+        if (!token) return res.status(401).send('access denied.')
 
         try {
             // verify token
@@ -23,7 +24,7 @@ module.exports = {
             // execute next middleware
             next()
         } catch (err) {
-            res.status(400).send({msg : 'invalid token'})
+            res.status(400).send('invalid token.')
         }
     }
 }
