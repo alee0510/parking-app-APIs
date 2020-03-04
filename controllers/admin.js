@@ -156,6 +156,7 @@ module.exports = {
     },
     editUserRole : async (req, res) => {
         const id = parseInt(req.params.id)
+        console.log('user id', id)
 
         // do query
         await connection.databaseQueryWithErrorHandle(res, async () => {
