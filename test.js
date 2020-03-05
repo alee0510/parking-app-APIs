@@ -16,9 +16,9 @@
 // if (role.includes('superadmin')) console.log('yes')
 
 // // date module
-// let date = new Date()
-// const today = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`
-// console.log(today)
+let date = new Date()
+const today = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`
+console.log(today)
 
 // // array statements
 // let arr = [1, 3, 4]
