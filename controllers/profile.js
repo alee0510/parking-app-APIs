@@ -9,8 +9,8 @@ const DIRECTORY = '../public/profiles/'
 // export controllers
 module.exports = {
     // get user profile info by user id => NEED login authentication
-    getUserProfileByID : async (req, res) => {
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+    getUserProfileByID : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'SELECT * FROM profiles WHERE id = ?'
             const result = await connection.databaseQuery(query, req.user.id)
 
@@ -19,8 +19,8 @@ module.exports = {
         })
     },
     // add profile data => NEED login authentication
-    addUserProfile : async (req, res) => {
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+    addUserProfile : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'INSERT INTO profiles SET ?'
             await connection.databaseQuery(query, req.body)
 
@@ -29,8 +29,8 @@ module.exports = {
         })
     },
     // edit user profile : change user image or profile data, => NEED login authentication
-    editUserProfile : async (req, res) => {
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+    editUserProfile : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'UPDATE profiles SET ? WHERE id = ?'
             await connection.databaseQuery(query, [req.body, req.user.id])
             
@@ -38,8 +38,8 @@ module.exports = {
             res.status(200).send('your profile has been updated.')
         })
     },
-    uploadImageProfile : async(req, res) => {
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+    uploadImageProfile : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             // check image file from request
             if (!req.file) throw ({code : 400, msg : 'image doesn\'t exist.'})
 

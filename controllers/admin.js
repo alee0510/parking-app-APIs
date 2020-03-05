@@ -6,7 +6,7 @@ const connection = require('../helpers/databaseQuery')(database)
 module.exports = {
     /* pagination implementation --> reverse : get the last registered user
     get all users account */
-    paginationGetUsers : async (req, res) => {
+    paginationGetUsers : (req, res) => {
         console.log(req.query)
 
         // define exception
@@ -17,7 +17,7 @@ module.exports = {
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const getFirstData = `SELECT * FROM users 
                                 WHERE ${only}
                                 ORDER BY id DESC LIMIT ?`
@@ -27,7 +27,7 @@ module.exports = {
             res.status(200).send(result)
         })
     },
-    paginationGetNextUsers : async (req, res) => {
+    paginationGetNextUsers : (req, res) => {
         console.log(req.query)
 
         // get and define execption
@@ -39,7 +39,7 @@ module.exports = {
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const getNextData = `SELECT * FROM users 
                                 WHERE ${only} AND id < ?
                                 ORDER BY id DESC LIMIT ?`
@@ -49,7 +49,7 @@ module.exports = {
             res.status(200).send(result)
         })
     },
-    paginationGetPreviousUsers : async (req, res) => {
+    paginationGetPreviousUsers : (req, res) => {
         console.log(req.query)
 
         // get and define execption
@@ -61,7 +61,7 @@ module.exports = {
         const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const getPrevData = `SELECT * FROM users
                                 WHERE ${only} AND id > ?
                                 ORDER BY id ASC LIMIT ?`
@@ -81,7 +81,7 @@ module.exports = {
         const only = `us.role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
         
         // do query
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const getProfileData = `SELECT pf.id, us.username, pf.name, 
                                     pf.image, pf.birthdate, pf.phone, pf.address 
                                     FROM users us
@@ -94,7 +94,7 @@ module.exports = {
             res.status(200).send(result)
         })
     },
-    paginationGetUserProfileNext : async (req, res) => {
+    paginationGetUserProfileNext : (req, res) => {
         console.log(req.query)
 
         // get and define execption
@@ -106,7 +106,7 @@ module.exports = {
         const only = `us.role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const getNextProfileData = `SELECT pf.id, us.username, pf.name, 
                                     pf.image, pf.birthdate, pf.phone, pf.address 
                                     FROM users us
@@ -119,7 +119,7 @@ module.exports = {
             res.status(200).send(result)
         })
     },
-    paginationGetUserProfilePrev : async (req, res) => {
+    paginationGetUserProfilePrev : (req, res) => {
         console.log(req.query)
 
         // get and define execption
@@ -131,7 +131,7 @@ module.exports = {
         const only = `us.role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
 
         // do query
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const getPrevProfileData = `SELECT pf.id, us.username, pf.name, 
                                     pf.image, pf.birthdate, pf.phone, pf.address 
                                     FROM users us
@@ -145,8 +145,8 @@ module.exports = {
         })
     },
     // superadmin feature : manage user's role
-    getUserRole : async (req, res) => {
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+    getUserRole : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const getRole = 'SELECT * FROM roles'
             const result = await connection.databaseQuery(getRole)
 
@@ -154,12 +154,12 @@ module.exports = {
             res.status(200).send(result)
         })
     },
-    editUserRole : async (req, res) => {
+    editUserRole : (req, res) => {
         const id = parseInt(req.params.id)
         console.log('user id', id)
 
         // do query
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const editRle = 'UPDATE users SET ? WHERE id = ?'
             await connection.databaseQuery(editRle, [req.body, id])
 
@@ -168,13 +168,13 @@ module.exports = {
         })
     },
     // superadmin feature : manage user account
-    deletUser : async (req, res) => {
+    deletUser : (req, res) => {
         console.log(req.query)
         const multiple = parseInt(req.query.multiple || 0) // value 0 or 1
         const id = parseInt(req.query.id)
 
         // do query
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             // define query
             let query = 'DELETE FROM users WHERE id = ?'
             if (multiple) query = `DELETE FROM users WEHERE id IN (${[...req.body.id]})`
@@ -188,8 +188,8 @@ module.exports = {
         })
     },
     // get total user in database
-    getTotalUser : async (req, res) => {
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+    getTotalUser : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'SELECT COUNT(*) AS total FROM users USE INDEX(PRIMARY)'
             const result = await connection.databaseQuery(query)
 

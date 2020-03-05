@@ -9,7 +9,7 @@ const connection = require('../helpers/databaseQuery')(database)
 // export controllers
 module.exports = {
     // register
-    register : async (req, res) => {
+    register : (req, res) => {
         const { username, email, password } = req.body
         await connection.databaseQueryWithErrorHandle(res, async () => {
             // check if username and email is avaiable, username or email can't be duplicate
@@ -26,13 +26,15 @@ module.exports = {
             const addUser = 'INSERT INTO users SET ?'
             const newUser = await connection.databaseQuery(addUser, req.body)
 
+            // add user profile and wallet
+
             // send token to client-side
             const token = jwt.createToken({id : newUser.insertId})
             res.header('Auth-Token', token).send({id : newUser.insertId})
         })
     },
     // login
-    login : async (req, res) => {
+    login : (req, res) => {
         await connection.databaseQueryWithErrorHandle(res, async () => {
             // do query
             const query = 'SELECT * FROM users WHERE username = ?'
@@ -52,7 +54,7 @@ module.exports = {
         })
     },
     // keep login
-    stayLogin : async (req, res) => {
+    stayLogin : (req, res) => {
         await connection.databaseQueryWithErrorHandle(res, async () => {
             // do query to always provide data to user
             const query = 'SELECT * FROM users WHERE id = ?'
