@@ -31,3 +31,12 @@
 // const jwt = require('./helpers/jwt')
 // const token = jwt.createToken({id : 1})
 // console.log(token)
+
+const obj = {
+    hello : 'alee',
+    age : '25'
+}
+
+console.log(obj)
+console.log(delete obj.age)
+console.log(obj)

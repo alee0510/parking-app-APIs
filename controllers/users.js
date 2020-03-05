@@ -11,7 +11,7 @@ module.exports = {
     // register
     register : (req, res) => {
         const { username, email, password } = req.body
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             // check if username and email is avaiable, username or email can't be duplicate
             const check = 'SELECT * FROM users WHERE username = ? OR email = ?'
             const result = await connection.databaseQuery(check, [username, email])
@@ -35,7 +35,7 @@ module.exports = {
     },
     // login
     login : (req, res) => {
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             // do query
             const query = 'SELECT * FROM users WHERE username = ?'
             const result = await connection.databaseQuery(query, req.body.username)
@@ -55,7 +55,7 @@ module.exports = {
     },
     // keep login
     stayLogin : (req, res) => {
-        await connection.databaseQueryWithErrorHandle(res, async () => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             // do query to always provide data to user
             const query = 'SELECT * FROM users WHERE id = ?'
             const result = await connection.databaseQuery(query, req.user.id)
