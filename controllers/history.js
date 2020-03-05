@@ -163,7 +163,7 @@ module.exports = {
             res.status(200).send(result)
         })
     },
-    getNexOnActive : (res, res) => {
+    getNexOnActive : (req, res) => {
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
         
@@ -184,7 +184,7 @@ module.exports = {
             res.status(200).send(result)
         })
     },
-    getPrevOnActive : (res, res) => {
+    getPrevOnActive : (req, res) => {
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
         
