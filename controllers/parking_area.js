@@ -22,7 +22,7 @@ module.exports = {
     addParkingArea : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
             const add = 'INSERT INTO parking_area SET ?'
-            await connection.databaseQuery(add)
+            await connection.databaseQuery(add, req.body)
 
             // send feedback to client-side
             res.status(200).send('new parking area has been added.')

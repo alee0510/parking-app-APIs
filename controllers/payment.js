@@ -25,7 +25,7 @@ module.exports = {
             await connection.databaseQuery(query, req.body)
 
             // send feedback to client-side
-            res.status(200).send('top up saldo has been send, witing for approval.')
+            res.status(200).send('top up saldo has been send, waiting for approval.')
         })
     },
     checkTransactionHistory : (req, res) => {
@@ -60,14 +60,14 @@ module.exports = {
                 status : 1
             }
             const addLogHistory = `INSERT INTO transaction_history SET ?`
-            await connection.databaseQuery(query, data)
+            await connection.databaseQuery(addLogHistory, data)
 
             // send feedback to client-side
             res.status(200).send('payment success.')
         })
     },
     // ADMIN : to-up approval
-    topUpApproveByAdmin : (req, res) => {
+    topUpApprovalByAdmin : (req, res) => {
         // get user id from req.params
         const transactionId = parseInt(req.params.id)
 
@@ -97,6 +97,70 @@ module.exports = {
             
             // send feedback to client-side
             res.status(200).send('top-up approval success.')
+        })
+    },
+    // get transaction history
+    getInitialTransactionHistory : (req, res) => {
+        const limit = parseInt(req.query.limit)
+
+        // define exception
+        const type = req.query.type === 'null' ? null : parseInt(req.query.type)
+        const exception = `WHERE type = ${type}`
+
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `SELECT * FROM transaction_history ${exception} ORDER by id DESC LIMIT ?`
+            const result = await connection.databaseQuery(query, limit)
+
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
+    },
+    getNextTransactionHistory : (req, res) => {
+        const id = parseInt(req.query.id)
+        const limit = parseInt(req.query.limit)
+
+        // define exception
+        const type = req.query.type === 'null' ? null : parseInt(req.query.type)
+        const exception = `WHERE type = ${type}`
+
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `SELECT * FROM transaction_history ${exception}
+                        WHERE id < ?
+                        ORDER by id DESC LIMIT ?`
+            const result = await connection.databaseQuery(query, [id, limit])
+
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
+    },
+    getPrevTransactionHIstory : (req, res) => {
+        const id = parseInt(req.query.id)
+        const limit = parseInt(req.query.limit)
+    
+        // define exception
+        const type = req.query.type === 'null' ? null : parseInt(req.query.type)
+        const exception = `WHERE type = ${type}`
+    
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `SELECT * FROM transaction_history ${exception}
+                        WHERE id > ?
+                        ORDER by id ASC LIMIT ?`
+            const result = await connection.databaseQuery(query, [id, limit])
+    
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
+        
+    },
+    // get total data
+    getTotalTransactionHistoryData : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'SELECT COUNT(*) AS total FROM transaction_history USE INDEX(PRIMARY)'
+            const result = await connection.databaseQuery(query)
+
+            // send feedback to client-side
+            const total = result[0]['total']
+            res.status(200).send([total])
         })
     }
 }

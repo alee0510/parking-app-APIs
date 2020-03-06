@@ -18,7 +18,7 @@ module.exports = {
     // USER : GET History by id and total cost by duration per-10 minutes
     getHistoryByUser : (req, res) => {
         const id = parseInt(req.params.id)
-        console.log(id)
+        // console.log(id)
         connection.databaseQueryWithErrorHandle(res, async () => {
             // get user history
             const getHistory = `SELECT h.id, us.username, h.area_id, h.enter_date, h.leave_date, h.duration, pk.place_name 
@@ -49,12 +49,12 @@ module.exports = {
     // add user log history when enter parking area
     addOnActive : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = 'INSERT INTO on_actibe SET ?'
+            const query = 'INSERT INTO on_active SET ?'
             const result = await connection.databaseQuery(query)
 
             // send feedback to client-side
             const insertId = result.insertId
-            res.status(200).send(insertId)
+            res.status(200).send([insertId])
         })
     },
     // change status when user leave parking area
@@ -70,7 +70,7 @@ module.exports = {
             const log = await connection.databaseQuery(getLog, id)
 
             // fill history table using data from log and leave data from log
-            log.leave_data = req.body.leave_date
+            log.leave_date = req.body.leave_date
             log.duration = req.body.duration
             delete log.status
 
@@ -101,7 +101,7 @@ module.exports = {
             res.status(200).send(result)
         })
     },
-    getNextHistory : (req, result) => {
+    getNextHistory : (req, res) => {
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
 

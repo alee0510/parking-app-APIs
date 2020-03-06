@@ -6,11 +6,11 @@ const connection = require('../helpers/databaseQuery')(database)
 module.exports = {
     /* pagination implementation --> reverse : get the last registered user
     get all users account */
-    paginationGetUsers : (req, res) => {
+    getInitialUserData : (req, res) => {
         console.log(req.query)
 
         // define exception
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
+        const on = req.query.role === 'null' ? null : parseInt(req.query.role)
         console.log(on)
         
         if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
@@ -27,7 +27,7 @@ module.exports = {
             res.status(200).send(result)
         })
     },
-    paginationGetNextUsers : (req, res) => {
+    getNextUserData : (req, res) => {
         console.log(req.query)
 
         // get and define execption
@@ -49,7 +49,7 @@ module.exports = {
             res.status(200).send(result)
         })
     },
-    paginationGetPreviousUsers : (req, res) => {
+    getPrevUserData : (req, res) => {
         console.log(req.query)
 
         // get and define execption
@@ -72,7 +72,7 @@ module.exports = {
         })
     },
     // get user profile
-    paginationGetUserProfile : async (req, res) => {
+    getInitialUserProfileData : async (req, res) => {
         console.log(req.query)
         
         // define exception
@@ -94,7 +94,7 @@ module.exports = {
             res.status(200).send(result)
         })
     },
-    paginationGetUserProfileNext : (req, res) => {
+    getNextUserProfileData : (req, res) => {
         console.log(req.query)
 
         // get and define execption
@@ -119,7 +119,7 @@ module.exports = {
             res.status(200).send(result)
         })
     },
-    paginationGetUserProfilePrev : (req, res) => {
+    getPrevUserProfileData : (req, res) => {
         console.log(req.query)
 
         // get and define execption
@@ -164,24 +164,25 @@ module.exports = {
             await connection.databaseQuery(editRle, [req.body, id])
 
             // send feedback to client-side
-            res.status(200).send(result)
+            res.status(200).send('role has been added.')
         })
     },
     // superadmin feature : manage user account
     deletUser : (req, res) => {
-        console.log(req.query)
-        const multiple = parseInt(req.query.multiple || 0) // value 0 or 1
-        const id = parseInt(req.query.id)
+        // console.log(req.query)
+        // const multiple = parseInt(req.query.multiple || 0) // value 0 or 1
+        const id = parseInt(req.params.id)
 
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
             // define query
-            let query = 'DELETE FROM users WHERE id = ?'
-            if (multiple) query = `DELETE FROM users WEHERE id IN (${[...req.body.id]})`
+            const query = 'DELETE FROM users WHERE id = ?'
+            // if (multiple) query = `DELETE FROM users WEHERE id IN (${[...req.body.id]})`
             
             // do query
-            console.log(query)
-            await connection.databaseQuery(query, id || [])
+            // console.log(query)
+            // await connection.databaseQuery(query, id || [])
+            await connection.databaseQuery(query, id)
 
             // send feedback to client-side
             res.status(200).send('user has been deleted.')

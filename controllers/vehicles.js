@@ -26,7 +26,7 @@ module.exports = {
     editCarBrand : (req, res) => {
         connection.databaseQueryWithErrorHandle(req, async () => {
             const query = 'UPDATE car_brands SET ? WHERE id ?'
-            await connection.databaseQuery(query, parseInt(req.params.id))
+            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
             
             // send feedback to client-side
             res.status(200).send('edit car brand success.')
@@ -54,7 +54,7 @@ module.exports = {
     editMotorBrand : (req, res) => {
         connection.databaseQueryWithErrorHandle(req, async () => {
             const query = 'UPDATE motor_brands SET ? WHERE id ?'
-            await connection.databaseQuery(query, parseInt(req.params.id))
+            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
             
             // send feedback to client-side
             res.status(200).send('edit motor brand success.')
@@ -82,7 +82,7 @@ module.exports = {
     editCarType : (req, res) => {
         connection.databaseQueryWithErrorHandle(req, async () => {
             const query = 'UPDATE car_types SET ? WHERE id ?'
-            await connection.databaseQuery(query, parseInt(req.params.id))
+            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
             
             // send feedback to client-side
             res.status(200).send('edit car types success.')
@@ -110,7 +110,7 @@ module.exports = {
     editMotorType : (req, res) => {
         connection.databaseQueryWithErrorHandle(req, async () => {
             const query = 'UPDATE motor_types SET ? WHERE id ?'
-            await connection.databaseQuery(query, parseInt(req.params.id))
+            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
             
             // send feedback to client-side
             res.status(200).send('edit motor type success.')

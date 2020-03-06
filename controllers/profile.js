@@ -18,21 +18,10 @@ module.exports = {
             res.status(200).send(result[0])
         })
     },
-    // add profile data => NEED login authentication
-    addUserProfile : (req, res) => {
-        connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = 'INSERT INTO profiles SET ?'
-            await connection.databaseQuery(query, req.body)
-
-            // send feeback to client-side
-            res.status(200).send('your profile has been added.')
-        })
-    },
-    // edit user profile : change user image or profile data, => NEED login authentication
     editUserProfile : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'UPDATE profiles SET ? WHERE id = ?'
-            await connection.databaseQuery(query, [req.body, req.user.id])
+            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
             
             // send feeback to client-side
             res.status(200).send('your profile has been updated.')

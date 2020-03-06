@@ -28,15 +28,15 @@ module.exports = {
         const limit = parseInt(req.query.limit)
 
         // do athorization to define exception
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        const only = on ? `WHERE pk.company_id = ${only}` : ''
+        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
+        const exception = company ? `WHERE pk.company_id = ${company}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT rt.id, us.username, rt.rating, rt.message, rt.date, pk.place_name 
                         FROM ratings rt
                         JOIN users us ON rt.user_id = us.id
                         JOIN parking_area pk ON rt.area_id = pk.id
-                        ${only} ORDER BY rt.id DESC LIMIT ?`
+                        ${exception} ORDER BY rt.id DESC LIMIT ?`
             const result = await connection.databaseQuery(query, limit)
 
             // send feedback to client-side
@@ -48,15 +48,15 @@ module.exports = {
         const limit = parseInt(req.query.limit)
 
         // do athorization to define exception
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        const only = on ? `pk.company_id = ${only}` : ''
+        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
+        const exception = company ? `WHERE pk.company_id = ${company}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT rt.id, us.username, rt.rating, rt.message, rt.date, pk.place_name 
                         FROM ratings rt
                         JOIN users us ON rt.user_id = us.id
                         JOIN parking_area pk ON rt.area_id = pk.id
-                        WHERE ${only} id < ?
+                        WHERE ${exception} id < ?
                         ORDER BY rt.id DESC LIMIT ?`
             const result = await connection.databaseQuery(query, [id, limit])
 
@@ -69,15 +69,15 @@ module.exports = {
         const limit = parseInt(req.query.limit)
 
         // do athorization to define exception
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        const only = on ? `pk.company_id = ${only}` : ''
+        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
+        const exception = company ? `WHERE pk.company_id = ${company}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT rt.id, us.username, rt.rating, rt.message, rt.date, pk.place_name 
                         FROM ratings rt
                         JOIN users us ON rt.user_id = us.id
                         JOIN parking_area pk ON rt.area_id = pk.id
-                        WHERE ${only} id > ?
+                        WHERE ${exception} id > ?
                         ORDER BY rt.id ASC LIMIT ?`
             const result = await connection.databaseQuery(query, [id, limit])
 

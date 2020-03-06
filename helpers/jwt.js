@@ -8,13 +8,13 @@ module.exports = {
         return jwt.sign(...args, process.env.SECRET_TOKEN)
     },
     // verify token
-    verify : (req, res, next) => {
-        // get token from request header
-        const token = req.header('Auth-Token')
-        // console.log('token', req.header('Auth-Token'))
-        if (!token) return res.status(401).send('access denied.')
-
+    verify : (req, res, next) => {        
         try {
+            // get token from request header
+            const token = req.header('Auth-Token')
+            // console.log('token', req.header('Auth-Token'))
+            if (!token) return res.status(401).send('access denied.')
+
             // verify token
             const verified = jwt.verify(token, process.env.SECRET_TOKEN)
             
@@ -24,6 +24,7 @@ module.exports = {
             // execute next middleware
             next()
         } catch (err) {
+            console.log(err)
             res.status(400).send('invalid token.')
         }
     }
