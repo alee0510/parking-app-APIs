@@ -12,7 +12,7 @@ router.get('/get/users/total', admin.getTotalUser)
 router.get('/get/users/profile/', admin.getInitialUserProfileData)
 router.get('/get/users/profile/next/', admin.getNextUserData)
 router.get('/get/users/profile/prev/', admin.getPrevUserProfileData)
-router.get('/get/roles', admin.getUserRole)
+router.get('/get/roles/', admin.getUserRole)
 router.patch('/edit/roles/:id', admin.editUserRole)
 router.delete('/delete/users/:id', admin.deletUser)
 
