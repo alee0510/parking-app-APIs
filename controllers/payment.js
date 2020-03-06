@@ -22,7 +22,7 @@ module.exports = {
 
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'INSERT INTO transaction_history SET ?'
-            await connection.databaseQuery(query)
+            await connection.databaseQuery(query, req.body)
 
             // send feedback to client-side
             res.status(200).send('top up saldo has been send, witing for approval.')
@@ -43,7 +43,7 @@ module.exports = {
         req.body.status = 1
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `INSERT INTO transaction_history SET ?`
-            await connection.databaseQuery(query)
+            await connection.databaseQuery(query, req.body)
 
             // send feedback to client-side
             res.status(200).send('payment success.')

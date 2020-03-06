@@ -15,7 +15,13 @@ module.exports = {
         })
     },
     addRating : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'INSERT INTO ratings SET ?'
+            await connection.databaseQuery(query, req.body)
 
+            // send feedback to client-side
+            res.status(200).send('add rating success.')
+        })
     },
     // SUPERADMIN and ADMIN : GET all ratings data
     getInitialRatings : (req, res) => {
