@@ -37,16 +37,66 @@ module.exports = {
             res.status(200).send(result)
         })
     },
-    // pay parking
+    // pay parking : user input date and payment total, include user id in params
     payParking : (req, res) => {
-        const id = parseInt(req.params.id)
-        req.body.status = 1
-        connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `INSERT INTO transaction_history SET ?`
-            await connection.databaseQuery(query, req.body)
+        const userId = parseInt(req.params.id)
+        const totalPayment = parseInt(req.body.total)
+        connection.databaseQueryTransaction(res, async () => {
+            // get current saldo
+            const getCurrentSaldo = 'SELECT * FROM wallet where id = ?'
+            const currentSaldo = await connection.databaseQuery(getCurrentSaldo, userId)
+
+            // reduce user saldo according to payment total
+            const saldo = currentSaldo - totalPayment
+            const reduceSaldo = `UPDATE FROM wallet SET saldo = ${saldo} WHERE id = ?`
+            await connection.databaseQuery(reduceSaldo, userId)
+
+            // add log to transaction history
+            const data = {
+                date : req.body.date,
+                type : 2,
+                ammount : totalPayment,
+                user_id : userId,
+                status : 1
+            }
+            const addLogHistory = `INSERT INTO transaction_history SET ?`
+            await connection.databaseQuery(query, data)
 
             // send feedback to client-side
             res.status(200).send('payment success.')
+        })
+    },
+    // ADMIN : to-up approval
+    topUpApproveByAdmin : (req, res) => {
+        // get user id from req.params
+        const transactionId = parseInt(req.params.id)
+
+        connection.databaseQueryTransaction(res, async () => {
+            // do authorization
+            if (parseInt(req.user.role) !== 1) throw({code : 401, msg : 'access denied.'})
+
+            // get top-up amount
+            const chekTopUpAmount = 'SELECT * FROM transaction_history WHERE id = ?'
+            const topUpAmount = await connection.databaseQuery(chekTopUpAmount, transactionId)
+
+            
+            // get user current saldo
+            const userId = parseInt(topUpAmount[0].user_id)
+            const checkUserSaldo = 'SELECT * FROM wallet where id = '
+            const currentSaldo = await connection.databaseQuery(checkUserSaldo, userId)
+            
+            
+            // top-up saldo to user wallet
+            const saldo = topUpAmount[0].amount + currentSaldo[0].saldo
+            const topUpSaldo = `UPDATE wallet WHERE SET ? user_id = ?`
+            await connection.databaseQuery(topUpSaldo, [{ saldo }, userId])
+
+            // change user status transaction
+            const approveStatus = 'UPDATE transaction_history SET status = 1 WHERE id = ?'
+            await connection.databaseQuery(approveStatus, transactionId)
+            
+            // send feedback to client-side
+            res.status(200).send('top-up approval success.')
         })
     }
 }
