@@ -14,6 +14,9 @@ module.exports = {
             res.status(200).send(result)
         })
     },
+    addRating : (req, res) => {
+
+    },
     // SUPERADMIN and ADMIN : GET all ratings data
     getInitialRatings : (req, res) => {
         const limit = parseInt(req.query.limit)
