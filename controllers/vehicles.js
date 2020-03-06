@@ -23,7 +23,7 @@ module.exports = {
             res.status(200).send('car new brand has been added.')
         })
     },
-    editCarBrand : (res, res) => {
+    editCarBrand : (req, res) => {
         connection.databaseQueryWithErrorHandle(req, async () => {
             const query = 'UPDATE car_brands SET ? WHERE id ?'
             await connection.databaseQuery(query, parseInt(req.params.id))
@@ -51,7 +51,7 @@ module.exports = {
             res.status(200).send('motor new brand has been added.')
         })
     },
-    editMotorBrand : (res, res) => {
+    editMotorBrand : (req, res) => {
         connection.databaseQueryWithErrorHandle(req, async () => {
             const query = 'UPDATE motor_brands SET ? WHERE id ?'
             await connection.databaseQuery(query, parseInt(req.params.id))
@@ -79,7 +79,7 @@ module.exports = {
             res.status(200).send('car new types has been added.')
         })
     },
-    editCarType : (res, res) => {
+    editCarType : (req, res) => {
         connection.databaseQueryWithErrorHandle(req, async () => {
             const query = 'UPDATE car_types SET ? WHERE id ?'
             await connection.databaseQuery(query, parseInt(req.params.id))
@@ -107,7 +107,7 @@ module.exports = {
             res.status(200).send('motor new type has been added.')
         })
     },
-    editMotorType : (res, res) => {
+    editMotorType : (req, res) => {
         connection.databaseQueryWithErrorHandle(req, async () => {
             const query = 'UPDATE motor_types SET ? WHERE id ?'
             await connection.databaseQuery(query, parseInt(req.params.id))
