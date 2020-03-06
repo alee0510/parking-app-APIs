@@ -9,6 +9,7 @@ const { users } = require('../controllers')
 
 // apply our controllers
 router.post('/register', users.register)
+router.post('/register/vehicle', users.regisVehicleInfo)
 router.post('/login', users.login)
 router.get('/staylogin', verify, users.stayLogin)
 

@@ -12,7 +12,7 @@ module.exports = {
     getUserProfileByID : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'SELECT * FROM profiles WHERE id = ?'
-            const result = await connection.databaseQuery(query, req.user.id)
+            const result = await connection.databaseQuery(query, (req.params.id))
 
             // send feedback to client-side
             res.status(200).send(result[0])

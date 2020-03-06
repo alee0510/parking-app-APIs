@@ -10,8 +10,8 @@ const connection = require('../helpers/databaseQuery')(database)
 module.exports = {
     // register
     register : (req, res) => {
-        const { username, email, password } = req.body
-        connection.databaseQueryWithErrorHandle(res, async () => {
+        const { fullname, username, email, password } = req.body // user basic infromation
+        connection.databaseQueryTransaction(res, async () => {
             // check if username and email is avaiable, username or email can't be duplicate
             const check = 'SELECT * FROM users WHERE username = ? OR email = ?'
             const result = await connection.databaseQuery(check, [username, email])
@@ -20,17 +20,36 @@ module.exports = {
             // crypt user password
             const salt = await bycript.genSalt(10)
             const cryptPassword = await bycript.hash(password, salt)
-            req.body.password = cryptPassword
+            // req.body.password = cryptPassword
 
             // input user data into database
+            const user = { username, email, password : cryptPassword }
             const addUser = 'INSERT INTO users SET ?'
-            const newUser = await connection.databaseQuery(addUser, req.body)
+            const newUser = await connection.databaseQuery(addUser, user)
 
-            // add user profile and wallet
+            // add user profile
+            const profile = { id : newUser.insertId, name : fullname }
+            const addProfile = 'INSERT INTO profiles SET ?'
+            await connection.databaseQuery(addProfile, profile)
+
+            // add user wallet
+            const wallet = { id : newUser.insertId, saldo : 0, point : 0}
+            const addWallet = 'INSERT INTO wallet SET ?'
+            await connection.databaseQuery(addWallet, wallet)
 
             // send token to client-side
             const token = jwt.createToken({id : newUser.insertId})
             res.header('Auth-Token', token).send({id : newUser.insertId})
+        })
+    },
+    // additional data : vehicle information
+    regisVehicleInfo : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'INSERT INTO vehicles SET ?'
+            await connection.databaseQuery(query)
+
+            // send feedback to client side
+            res.status(200).send('vehicle register success.')
         })
     },
     // login
