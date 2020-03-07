@@ -1,6 +1,5 @@
 // import module
 const router = require('express').Router()
-const jwt = require('../helpers/jwt')
 
 // import our controllers
 const { history } = require('../controllers')

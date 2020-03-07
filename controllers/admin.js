@@ -190,8 +190,12 @@ module.exports = {
     },
     // get total user in database
     getTotalUser : (req, res) => {
+        // define exception
+        const role = req.query.role === 'null' ? null : parseInt(req.query.role)
+        const exception = role ? `WHERE role = ${role}` : ''
+
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = 'SELECT COUNT(*) AS total FROM users USE INDEX(PRIMARY)'
+            const query = `SELECT COUNT(*) AS total FROM users USE INDEX(PRIMARY) ${exception} `
             const result = await connection.databaseQuery(query)
 
             // send feedback to client-side

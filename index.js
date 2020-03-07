@@ -38,9 +38,9 @@ app.get('/', (req, res) => {
 })
 
 // connect our router
-const { adminRouter, userRouter, profileRouter, historyRouter } = require('./routers')
+const { adminRouter, userRouter, profileRouter, vehicleRouter } = require('./routers')
 app.use('/api/admin/', adminRouter)
-app.use('/api/history/', historyRouter)
+app.use('/api/admin/', vehicleRouter)
 app.use('/api/user/', userRouter)
 app.use('/api/user/', profileRouter)
 
