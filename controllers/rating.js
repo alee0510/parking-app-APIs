@@ -84,5 +84,21 @@ module.exports = {
             // send feedback to client-side
             res.status(200).send(result)
         })
+    },
+    getTotalRating : (req, res) => {
+        // do athorization to define exception
+        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
+        const exception = company ? `WHERE pk.company_id = ${company}` : ''
+
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `SELECT COUNT(*) AS total 
+                        FROM ratings rt USE INDEX(PRIMARY)
+                        JOIN parking_area pk on rt.area_id = pk.id ${exception}`
+            const total = await company.databaseQuery(query)
+
+            // send feedback to client-side
+            const total = result[0]['total']
+            res.status(200).send([total])
+        })
     }
 }
