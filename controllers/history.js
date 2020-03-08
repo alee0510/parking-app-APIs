@@ -6,8 +6,26 @@ const connection = require('../helpers/databaseQuery')(database)
 module.exports = {
     // get total data
     getTotalHistory : (req, res) => {
+        // do athorization to define exception
+        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
+        const exception = company ? `WHERE pk.company_id = ${company}` : ''
+        
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = 'SELECT COUNT(*) AS total FROM history USE INDEX(PRIMARY)'
+            const query = `SELECT COUNT(*) AS total FROM history USE INDEX(PRIMARY) ${exception}`
+            const result = await connection.databaseQuery(query)
+
+            // send feedback to client-side
+            const total = result[0]['total']
+            res.status(200).send([total])
+        })
+    },
+    getTotalOnActive : (req, res) => {
+        // do athorization to define exception
+        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
+        const exception = company ? `WHERE pk.company_id = ${company}` : ''
+
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `SELECT COUNT(*) AS total FROM on_active USE INDEX(PRIMARY) ${exception}`
             const result = await connection.databaseQuery(query)
 
             // send feedback to client-side
@@ -86,15 +104,15 @@ module.exports = {
         const limit = parseInt(req.query.limit)
 
         // do authorization to define execption
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        const only = on ? `WHERE pk.company_id = ${only}` : ''
+        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
+        const execption = company ? `WHERE pk.company_id = ${company}` : ''
 
         connection.databaseQueryWithErrorHandle(req, async () => {
             const query = `SELECT h.id, us.username, h.enter_date, h.leave_date, h.duration, pk.place_name 
                         FROM history h
                         JOIN users us ON h.user_id = us.id
                         JOIN parking_area pk ON h.area_id = pk.id 
-                        ${only} ORDER BY h.id DESC LIMIT ?`
+                        ${execption} ORDER BY h.id DESC LIMIT ?`
             const result = await connection.databaseQuery(query, limit)
             
             // send feedback to client-side
@@ -106,15 +124,15 @@ module.exports = {
         const limit = parseInt(req.query.limit)
 
         // do authorization to define execption
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        const only = on ? `pk.company_id = ${only} AND` : ''
+        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
+        const execption = company ? `AND pk.company_id = ${company}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT h.id, us.username, h.enter_date, h.leave_date, h.duration, pk.place_name 
                         FROM history h
                         JOIN users us ON h.user_id = us.id
                         JOIN parking_area pk ON h.area_id = pk.id
-                        WHERE ${only} h.id < ? 
+                        WHERE h.id < ? ${execption}
                         ORDER BY h.id DESC LIMIT ?`
             const result = await connection.databaseQuery(query, [id, limit])
             
@@ -127,15 +145,15 @@ module.exports = {
         const limit = parseInt(req.query.limit)
     
         // do authorization to define execption
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        const only = on ? `pk.company_id = ${only} AND` : ''
+        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
+        const execption = company ? `AND pk.company_id = ${company}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT h.id, us.username, h.enter_date, h.leave_date, h.duration, pk.place_name 
                         FROM history h
                         JOIN users us ON h.user_id = us.id
                         JOIN parking_area pk ON h.area_id = pk.id
-                        WHERE ${only} h.id > ?
+                        WHERE h.id > ? ${execption}
                         ORDER BY h.id ASC LIMIT ?`
             const result = await connection.databaseQuery(query, [id, limit])
             
@@ -148,15 +166,15 @@ module.exports = {
         const limit = parseInt(req.query.limit)
 
         // do authorization to define execption
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        const only = on ? `WHERE pk.company_id = ${only}` : ''
+        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
+        const execption = company ? `WHERE pk.company_id = ${company}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT oa.id, us.username, oa.enter_date, oa.status, pk.place_name, pk.company_id 
                         FROM on_active oa
                         JOIN users us ON oa.user_id = us.id
                         JOIN parking_area pk ON oa.area_id = pk.id
-                        ${only} ORDER BY oa.id DESC LIMIT ?`
+                        ${execption} ORDER BY oa.id DESC LIMIT ?`
             const result = await databaseQuery(query, limit)
 
             // send feedback to client-side
@@ -168,15 +186,15 @@ module.exports = {
         const limit = parseInt(req.query.limit)
         
         // do authorization to define execption
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        const only = on ? `pk.company_id = ${only} AND` : ''
+        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
+        const execption = company ? `AND pk.company_id = ${company}` : ''
         
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT oa.id, us.username, oa.enter_date, oa.status, pk.place_name, pk.company_id 
                         FROM on_active oa
                         JOIN users us ON oa.user_id = us.id
                         JOIN parking_area pk ON oa.area_id = pk.id
-                        WHERE oa.id < ? ${only} 
+                        WHERE oa.id < ? ${execption} 
                         ORDER BY oa.id DESC LIMIT ?`
             const result = await databaseQuery(query, [id, limit])
         
@@ -189,15 +207,15 @@ module.exports = {
         const limit = parseInt(req.query.limit)
         
         // do authorization to define execption
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        const only = on ? `pk.company_id = ${only} AND` : ''
+        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
+        const execption = company ? `AND pk.company_id = ${company}` : ''
         
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT oa.id, us.username, oa.enter_date, oa.status, pk.place_name, pk.company_id 
                         FROM on_active oa
                         JOIN users us ON oa.user_id = us.id
                         JOIN parking_area pk ON oa.area_id = pk.id
-                        WHERE oa.id > ? ${only} 
+                        WHERE oa.id > ? ${execption} 
                         ORDER BY oa.id ASC LIMIT ?`
             const result = await databaseQuery(query, [id, limit])
         
