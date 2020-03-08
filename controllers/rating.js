@@ -94,7 +94,7 @@ module.exports = {
             const query = `SELECT COUNT(*) AS total 
                         FROM ratings rt USE INDEX(PRIMARY)
                         JOIN parking_area pk on rt.area_id = pk.id ${exception}`
-            const total = await company.databaseQuery(query)
+            const result = await company.databaseQuery(query)
 
             // send feedback to client-side
             const total = result[0]['total']
