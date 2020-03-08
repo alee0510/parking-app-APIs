@@ -70,11 +70,47 @@ module.exports = {
         })
     },
     // MOTOR BRANDS
+    getTotalMotorBrand : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'SELECT COUNT(*) AS total FROM motor_brands USE INDEX(PRIMARY)'
+            const result = await connection.databaseQuery(query)
+
+            // send feedback to client-side
+            const total = result[0]['total']
+            res.status(200).send([total])
+        })
+    },
     getMotorBrand : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = 'SELECT * FROM motor_brands'
-            const result = await connection.databaseQuery(query)
+            const query = `SELECT * FROM motor_brands LIMIT ?`
+            const result = await connection.databaseQuery(query, parseInt(req.query.limit))
     
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
+    },
+    getNextMotorBrand : (req, res) => {
+        const id = parseInt(req.query.id)
+        const limit = parseInt(req.query.limit)
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `SELECT * FROM motor_brands
+                        WHERE id > ?
+                        LIMIT ?`
+            const result = await connection.databaseQuery(query, [id, limit])
+            
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
+    },
+    getPrevMotorBrand : (req, res) => {
+        const id = parseInt(req.query.id)
+        const limit = parseInt(req.query.limit)
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `SELECT * FROM motor_brands
+                        WHERE id < ?
+                        ORDER BY id DESC LIMIT ?`
+            const result = await connection.databaseQuery(query, [id, limit])
+            
             // send feedback to client-side
             res.status(200).send(result)
         })
@@ -98,7 +134,7 @@ module.exports = {
         })
     },
     // CAR & MOTOR TYPE : get, add, and edit
-    getCarTypeTotal : (req, res) => {
+    getTotalCarType : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'SELECT COUNT(*) as total FROM car_types USE INDEX(PRIMARY)'
             const result = await connection.databaseQuery(query)
@@ -164,12 +200,55 @@ module.exports = {
             res.status(200).send('edit car types success.')
         })
     },
-    // MOTOR BRANDS
+    // MOTOR TYPES
+    getTotalMotorType : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'SELECT COUNT(*) AS total FROM motor_types USE INDEX(PRIMARY)'
+            const result = await connection.databaseQuery(query)
+
+            // send feedback to client-side
+            const total = result[0]['total']
+            res.status(200).send([total])
+        })
+    },
     getMotorType : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = 'SELECT * FROM motor_types'
-            const result = await connection.databaseQuery(query)
+            const query = `SELECT mt.id, mt.name, mb.brand 
+                        FROM motor_types mt
+                        JOIN motor_brands mb ON mt.brand_id = mb.id
+                        LIMIT ?`
+            const result = await connection.databaseQuery(query, parseInt(req.query.limit))
     
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
+    },
+    getNextMotorType : (req, res) => {
+        const id = parseInt(req.query.id)
+        const limit = parseInt(req.query.limit)
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `SELECT mt.id, mt.name, mb.brand 
+                        FROM motor_types mt
+                        JOIN motor_brands mb ON mt.brand_id = mb.id
+                        WHERE mt.id > ?
+                        LIMIT ?`
+            const result = await connection.databaseQuery(query, [id, limit])
+
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
+    },
+    getPrevMotorType : (req, res) => {
+        const id = parseInt(req.query.id)
+        const limit = parseInt(req.query.limit)
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `SELECT mt.id, mt.name, mb.brand 
+                        FROM motor_types mt
+                        JOIN motor_brands mb ON mt.brand_id = mb.id
+                        WHERE mt.id < ?
+                        ORDER BY mt.id DESC LIMIT ?`
+            const result = await connection.databaseQuery(query, [id, limit])
+
             // send feedback to client-side
             res.status(200).send(result)
         })
