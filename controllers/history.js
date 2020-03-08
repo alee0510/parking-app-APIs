@@ -175,7 +175,7 @@ module.exports = {
                         JOIN users us ON oa.user_id = us.id
                         JOIN parking_area pk ON oa.area_id = pk.id
                         ${execption} ORDER BY oa.id DESC LIMIT ?`
-            const result = await databaseQuery(query, limit)
+            const result = await connection.databaseQuery(query, limit)
 
             // send feedback to client-side
             res.status(200).send(result)
@@ -196,7 +196,7 @@ module.exports = {
                         JOIN parking_area pk ON oa.area_id = pk.id
                         WHERE oa.id < ? ${execption} 
                         ORDER BY oa.id DESC LIMIT ?`
-            const result = await databaseQuery(query, [id, limit])
+            const result = await connection.databaseQuery(query, [id, limit])
         
             // send feedback to client-side
             res.status(200).send(result)
@@ -217,7 +217,7 @@ module.exports = {
                         JOIN parking_area pk ON oa.area_id = pk.id
                         WHERE oa.id > ? ${execption} 
                         ORDER BY oa.id ASC LIMIT ?`
-            const result = await databaseQuery(query, [id, limit])
+            const result = await connection.databaseQuery(query, [id, limit])
         
             // send feedback to client-side
             res.status(200).send(result)
