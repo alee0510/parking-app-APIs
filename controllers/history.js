@@ -11,8 +11,12 @@ module.exports = {
         const exception = company ? `WHERE pk.company_id = ${company}` : ''
         
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT COUNT(*) AS total FROM history USE INDEX(PRIMARY) ${exception}`
+            const query = `SELECT COUNT(*) as total
+                        FROM history h USE INDEX(PRIMARY)
+                        JOIN parking_area pk ON h.area_id = pk.id ${exception}`
+            console.log(query)
             const result = await connection.databaseQuery(query)
+            console.log(result)
 
             // send feedback to client-side
             const total = result[0]['total']
@@ -25,7 +29,9 @@ module.exports = {
         const exception = company ? `WHERE pk.company_id = ${company}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT COUNT(*) AS total FROM on_active USE INDEX(PRIMARY) ${exception}`
+            const query = `SELECT COUNT(*) as total
+                        FROM on_active oa USE INDEX(PRIMARY)
+                        JOIN parking_area pk ON oa.area_id = pk.id ${exception}`
             const result = await connection.databaseQuery(query)
 
             // send feedback to client-side

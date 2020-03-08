@@ -5,7 +5,7 @@ const router = require('express').Router()
 const { history } = require('../controllers')
 
 // apply our controllers
-router.get('/total', history.getTotalHistory)
+router.get('/data/total', history.getTotalHistory)
 router.get('/user/:id', history.getHistoryByUser)
 router.get('/data', history.getInitialHistory)
 router.get('/data/next', history.getNextHistory)
