@@ -108,7 +108,11 @@ module.exports = {
         const exception = type ? `WHERE type = ${type}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT * FROM transaction_history ${exception} ORDER by id DESC LIMIT ?`
+            const query = `SELECT th.id, th.date, th.type, th.amount, th.user_id, us.username, th.status 
+                    FROM transaction_history th
+                    JOIN users us ON us.id = th.user_id 
+                    ${exception}
+                    ORDER by th.id DESC LIMIT ?`
             const result = await connection.databaseQuery(query, limit)
 
             // send feedback to client-side
@@ -121,12 +125,14 @@ module.exports = {
 
         // define exception
         const type = req.query.type === 'null' ? null : parseInt(req.query.type)
-        const exception = type ? `WHERE type = ${type}` : ''
+        const exception = type ? `AND type = ${type}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT * FROM transaction_history ${exception}
-                        WHERE id < ?
-                        ORDER by id DESC LIMIT ?`
+            const query = `SELECT th.id, th.date, th.type, th.amount, th.user_id, us.username, th.status 
+                    FROM transaction_history th
+                    JOIN users us ON us.id = th.user_id 
+                    WHERE th.id < ? ${exception}
+                    ORDER by th.id DESC LIMIT ?`
             const result = await connection.databaseQuery(query, [id, limit])
 
             // send feedback to client-side
@@ -139,12 +145,14 @@ module.exports = {
     
         // define exception
         const type = req.query.type === 'null' ? null : parseInt(req.query.type)
-        const exception = type ? `WHERE type = ${type}` : ''
+        const exception = type ? `AND type = ${type}` : ''
     
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT * FROM transaction_history ${exception}
-                        WHERE id > ?
-                        ORDER by id ASC LIMIT ?`
+            const query = `SELECT th.id, th.date, th.type, th.amount, th.user_id, us.username, th.status 
+                    FROM transaction_history th
+                    JOIN users us ON us.id = th.user_id 
+                    WHERE th.id > ? ${exception}
+                    ORDER by th.id ASC LIMIT ?`
             const result = await connection.databaseQuery(query, [id, limit])
     
             // send feedback to client-side
