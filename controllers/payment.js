@@ -170,5 +170,24 @@ module.exports = {
             const total = result[0]['total']
             res.status(200).send([total])
         })
+    },
+    // get payment status and types
+    getPaymentStatus : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'SELECT * FROM transaction_status'
+            const result = await connection.databaseQuery(query)
+            
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
+    },
+    getPaymentTypes : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'SELECT * FROM transaction_types'
+            const result = await connection.databaseQuery(query)
+            
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
     }
 }
