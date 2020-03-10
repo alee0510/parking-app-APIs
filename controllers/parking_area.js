@@ -7,11 +7,14 @@ module.exports = {
     // SUPERADMIN & ADMIN : get parking area data
     getParkingAreaData : (req, res) => {
         // do authorization to define execption
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        const only = on ? `WHERE company_id = ${only}` : ''
+        const company = req.query.company === 'null' & !req.query.company ? null 
+                        : parseInt(req.query.company)
+        const execption = company ? `WHERE company_id = ${company}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const getData = `SELECT * FROM parking_area ${only}`
+            const getData = `SELECT p.company, pk.id, pk.address, pk.city, pk.province, pk.car_cost, pk.motor_cost, pk.slot, pk.place_name, pk.geo_location 
+                        FROM parking_area pk
+                        JOIN partners p ON p.id = pk.company_id ${execption}`
             const data = await connection.databaseQuery(getData)
 
             // send feedback to client side
@@ -40,5 +43,6 @@ module.exports = {
             // send feedback to client-side
             res.status(200).send('area has been deleted.')
         })
-    }
+    },
+    // edit parking area
 }
