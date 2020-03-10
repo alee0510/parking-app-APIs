@@ -105,7 +105,7 @@ module.exports = {
 
         // define exception
         const type = req.query.type === 'null' ? null : parseInt(req.query.type)
-        const exception = `WHERE type = ${type}`
+        const exception = type ? `WHERE type = ${type}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT * FROM transaction_history ${exception} ORDER by id DESC LIMIT ?`
@@ -121,7 +121,7 @@ module.exports = {
 
         // define exception
         const type = req.query.type === 'null' ? null : parseInt(req.query.type)
-        const exception = `WHERE type = ${type}`
+        const exception = type ? `WHERE type = ${type}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT * FROM transaction_history ${exception}
@@ -139,7 +139,7 @@ module.exports = {
     
         // define exception
         const type = req.query.type === 'null' ? null : parseInt(req.query.type)
-        const exception = `WHERE type = ${type}`
+        const exception = type ? `WHERE type = ${type}` : ''
     
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT * FROM transaction_history ${exception}

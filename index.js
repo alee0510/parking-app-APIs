@@ -39,13 +39,14 @@ app.get('/', (req, res) => {
 
 // connect our router
 const { adminRouter, userRouter, profileRouter, 
-    vehicleRouter, ratingRouter, historyRouter } = require('./routers')
+    vehicleRouter, ratingRouter, historyRouter, paymentRouter } = require('./routers')
 app.use('/api/admin', adminRouter)
 app.use('/api/admin', vehicleRouter)
 app.use('/api/user', userRouter)
 app.use('/api/user', profileRouter)
 app.use('/api/rating', ratingRouter)
 app.use('/api/history', historyRouter)
+app.use('/api/payment', paymentRouter)
 
 
 console.log('secret token : ', process.env.SECRET_TOKEN)
