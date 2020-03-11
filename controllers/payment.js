@@ -53,7 +53,7 @@ module.exports = {
 
             // add log to transaction history
             const data = {
-                date : req.body.date,
+                // date : req.body.date,
                 type : 2,
                 ammount : totalPayment,
                 user_id : userId,
