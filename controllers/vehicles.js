@@ -335,12 +335,27 @@ module.exports = {
     
     // USER : get and edit vehilce data
     getUserVehicle : (req, res) => {
+        const id = parseInt(req.params.id)
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT * FROM vehicles WHERE user_id = ?`
-            const result = await connection.databaseQuery(query, parseInt(req.params.id))
-        
+            const result = await connection.databaseQuery(query, id)
+            console.log(result)
+
+            // check vehilce type
+            const vehicleType = result[0].vehicle_type
+            const brand = vehicleType === 1 ? `car_brands` : `motor_brands`
+            const type = vehicleType === 1 ? `car_types` : `motor_types`
+
+            // define query
+            const getVehicle = `SELECT v.id, v.police_no, b.brand, t.name as type, v.color, v.user_id, v.vehicle_type
+                        FROM vehicles v
+                        JOIN ${type} t ON t.id = v.type_id
+                        JOIN ${brand} b ON b.id = v.brand_id
+                        WHERE v.user_id = ?`
+            const vehilce = await connection.databaseQuery(getVehicle, id)
+            
             // send feedback to client-side
-            res.status(200).send(result)
+            res.status(200).send(vehilce)
         })
     },
     editVehicleData : (req, res) => {

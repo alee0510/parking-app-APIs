@@ -26,8 +26,8 @@ router.patch('/profile/edit/:id', profile.editUserProfile)
 router.patch('/profile/upload/:id', profile.uploadImageProfile)
 
 // vehicle
-router.get('/vehilce', vehicles.getUserVehicle)
-router.patch('/vehicle', vehicles.editVehicleData)
+router.get('/vehicle/:id', vehicles.getUserVehicle)
+router.patch('/vehicle/:id', vehicles.editVehicleData)
 
 // rating
 router.get('/rating/:id', rating.getRatingByUser)
