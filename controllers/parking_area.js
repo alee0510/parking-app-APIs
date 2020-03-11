@@ -12,7 +12,7 @@ module.exports = {
         const execption = company ? `WHERE company_id = ${company}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const getData = `SELECT p.company, pk.id, pk.address, pk.city, pk.province, pk.car_cost, pk.motor_cost, pk.slot, pk.place_name, pk.geo_location 
+            const getData = `SELECT p.company, pk.id, pk.address, pk.city, pk.province, pk.car_cost, pk.motor_cost, pk.car_slot, pk.motor_slot, pk.place_name, pk.geo_location 
                         FROM parking_area pk
                         JOIN partners p ON p.id = pk.company_id ${execption}`
             const data = await connection.databaseQuery(getData)
