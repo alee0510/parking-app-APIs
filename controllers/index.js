@@ -8,7 +8,18 @@ const rating = require('./rating')
 const payment = require('./payment')
 const vehicles = require('./vehicles')
 const parking_area = require('./parking_area')
+const partner = require('./partner')
 
 // export controllers
-module.exports = { users, account, profile, admin, 
-    history, rating, payment, vehicles, parking_area }
+module.exports = { 
+    users, 
+    account, 
+    profile, 
+    admin, 
+    history, 
+    rating, 
+    payment, 
+    vehicles, 
+    parking_area,
+    partner 
+}
