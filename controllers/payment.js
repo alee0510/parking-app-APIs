@@ -162,8 +162,13 @@ module.exports = {
     },
     // get total data
     getTotalTransactionHistoryData : (req, res) => {
+        // do authorization to define execption
+        const type = ['null', undefined].includes(req.query.type) ? null : parseInt(req.query.type)
+        const exception = type ? `WHERE type = ${type}` : ''
+
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = 'SELECT COUNT(*) AS total FROM transaction_history USE INDEX(PRIMARY)'
+            const query = `SELECT COUNT(*) AS total 
+                        FROM transaction_history USE INDEX(PRIMARY) ${exception}`
             const result = await connection.databaseQuery(query)
 
             // send feedback to client-side

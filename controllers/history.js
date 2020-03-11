@@ -14,7 +14,7 @@ module.exports = {
             const query = `SELECT COUNT(*) as total
                         FROM history h USE INDEX(PRIMARY)
                         JOIN parking_area pk ON h.area_id = pk.id ${exception}`
-            console.log(query)
+            // console.log(query)
             const result = await connection.databaseQuery(query)
             console.log(result)
 

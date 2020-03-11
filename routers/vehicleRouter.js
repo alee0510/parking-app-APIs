@@ -31,6 +31,7 @@ router.get('/vehicle/motor/brands/all', vehicles.getAllMotorBrand)
 
 // CRUD OPERATION
 router.patch('/vehicle/car/brands/edit/:id', vehicles.editCarBrand)
+router.patch('/vehicle/car/types/edit/:id', vehicles.editCarType)
 
 // export our routers
 module.exports = router

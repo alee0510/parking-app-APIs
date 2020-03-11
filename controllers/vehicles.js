@@ -168,7 +168,7 @@ module.exports = {
     },
     getCarType : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT ct.id, ct.name, cb.brand FROM car_types ct
+            const query = `SELECT ct.id, ct.name, cb.brand, ct.brand_id FROM car_types ct
                         JOIN car_brands cb ON ct.brand_id = cb.id
                         LIMIT ?`
             const result = await connection.databaseQuery(query, parseInt(req.query.limit))
@@ -181,7 +181,7 @@ module.exports = {
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT ct.id, ct.name, cb.brand FROM car_types ct
+            const query = `SELECT ct.id, ct.name, cb.brand, ct.brand_id FROM car_types ct
                         JOIN car_brands cb ON ct.brand_id = cb.id
                         WHERE ct.id > ? LIMIT ?`
             const result = await connection.databaseQuery(query, [id, limit])
@@ -194,7 +194,7 @@ module.exports = {
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT ct.id, ct.name, cb.brand FROM car_types ct
+            const query = `SELECT ct.id, ct.name, cb.brand, ct.brand_id FROM car_types ct
                         JOIN car_brands cb ON ct.brand_id = cb.id
                         WHERE ct.id < ?
                         ORDER BY ct.id DESC LIMIT ?`
@@ -244,7 +244,7 @@ module.exports = {
     },
     getMotorType : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT mt.id, mt.name, mb.brand 
+            const query = `SELECT mt.id, mt.name, mb.brand, mt.brand_id 
                         FROM motor_types mt
                         JOIN motor_brands mb ON mt.brand_id = mb.id
                         LIMIT ?`
@@ -258,7 +258,7 @@ module.exports = {
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT mt.id, mt.name, mb.brand 
+            const query = `SELECT mt.id, mt.name, mb.brand, mt.brand_id  
                         FROM motor_types mt
                         JOIN motor_brands mb ON mt.brand_id = mb.id
                         WHERE mt.id > ?
@@ -273,7 +273,7 @@ module.exports = {
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT mt.id, mt.name, mb.brand 
+            const query = `SELECT mt.id, mt.name, mb.brand, mt.brand_id  
                         FROM motor_types mt
                         JOIN motor_brands mb ON mt.brand_id = mb.id
                         WHERE mt.id < ?
