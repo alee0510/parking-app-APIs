@@ -332,4 +332,24 @@ module.exports = {
             res.status(200).send(result)
         })
     },
+    
+    // USER : get and edit vehilce data
+    getUserVehicle : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `SELECT * FROM vehicles WHERE user_id = ?`
+            const result = await connection.databaseQuery(query, parseInt(req.params.id))
+        
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
+    },
+    editVehicleData : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `UPDATE vehicles SET ? WHERE user_id = ?`
+            await connection.databaseQuery(query, parseInt(req.params.id))
+        
+            // send feedback to client-side
+            res.status(200).send('vehicles data has been updated.')
+        })
+    }
 }

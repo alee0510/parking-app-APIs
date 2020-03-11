@@ -19,13 +19,13 @@ module.exports = {
     },
     // edit account : change username or passowrd => NEED login authentication
     changePassword : (req, res) => {
-        const id = parseInt(req.params.id)
+        // const id = parseInt(req.params.id)
         const { oldPassword, newPassword } = req.body
 
         connection.databaseQueryWithErrorHandle(res, async () => {
             // do query to get user data
             const getUser = 'SELECT * FROM users WHERE id = ?'
-            const user = await connection.databaseQuery(getUser, id)
+            const user = await connection.databaseQuery(getUser, req.user.id)
 
             // do authentication => password confirmation
             const valid = await bycript.compare(oldPassword, user[0].password)
