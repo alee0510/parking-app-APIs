@@ -7,7 +7,7 @@ module.exports = {
     // SUPERADMIN & ADMIN : get parking area data
     getParkingAreaData : (req, res) => {
         // do authorization to define execption
-        const company = req.query.company === 'null' & !req.query.company ? null 
+        const company = ['null', undefined].includes(req.query.company) ? null 
                         : parseInt(req.query.company)
         const execption = company ? `WHERE company_id = ${company}` : ''
 
@@ -37,12 +37,21 @@ module.exports = {
         const area_id = parseInt(req.query.areaid)
 
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const deleteParkingArea = 'DELETE FROM parking_area WHERE company_id = ? and id = ?'
-            await connection.databaseQueryWithErrorHandle(deleteParkingArea, [company_id, area_id])
+            const query = 'DELETE FROM parking_area WHERE company_id = ? and id = ?'
+            await connection.databaseQuery(query, [company_id, area_id])
 
             // send feedback to client-side
             res.status(200).send('area has been deleted.')
         })
     },
     // edit parking area
+    editParkingArea : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `UPDATE FROM parking_area WHERE company_id = ? and id = ?`
+            await connection.databaseQuery(query)
+            
+            // send feedback to client-side
+            res.status(200).send('area has been edited.')
+        })
+    }
 }

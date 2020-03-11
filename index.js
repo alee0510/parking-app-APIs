@@ -44,7 +44,9 @@ const { adminRouter,
     vehicleRouter, 
     ratingRouter, 
     historyRouter, 
-    paymentRouter } = require('./routers')
+    paymentRouter,
+    parkingAreaRouter
+} = require('./routers')
 
 // api web
 app.use('/api/admin', adminRouter)
@@ -54,6 +56,7 @@ app.use('/api/user', profileRouter)
 app.use('/api/rating', ratingRouter)
 app.use('/api/history', historyRouter)
 app.use('/api/payment', paymentRouter)
+app.use('/api/parking', parkingAreaRouter)
 
 // api mobile
 

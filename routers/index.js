@@ -6,6 +6,7 @@ const historyRouter = require('./historyRouter')
 const vehicleRouter = require('./vehicleRouter')
 const ratingRouter = require('./ratingRouter')
 const paymentRouter = require('./paymentRouter')
+const parkingAreaRouter = require('./parkingAreaRouter')
 
 // export our routers
 module.exports = { 
@@ -15,5 +16,6 @@ module.exports = {
     vehicleRouter, 
     ratingRouter, 
     historyRouter, 
-    paymentRouter
+    paymentRouter,
+    parkingAreaRouter
 }
