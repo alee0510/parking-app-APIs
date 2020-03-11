@@ -114,7 +114,10 @@ module.exports = {
         const execption = company ? `WHERE pk.company_id = ${company}` : ''
 
         connection.databaseQueryWithErrorHandle(req, async () => {
-            const query = `SELECT h.id, us.username, h.enter_date, h.leave_date, h.duration, pk.place_name 
+            const query = `SELECT h.id, us.username,
+                        DATE_FORMAT(h.enter_date, '%W, %D %M %Y, %H:%i') AS enter_date,
+                        DATE_FORMAT(h.leave_date, '%W, %D %M %Y, %H:%i') AS leave_date, 
+                        h.duration, pk.place_name 
                         FROM history h
                         JOIN users us ON h.user_id = us.id
                         JOIN parking_area pk ON h.area_id = pk.id 
@@ -134,7 +137,10 @@ module.exports = {
         const execption = company ? `AND pk.company_id = ${company}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT h.id, us.username, h.enter_date, h.leave_date, h.duration, pk.place_name 
+            const query = `SELECT h.id, us.username,
+                        DATE_FORMAT(h.enter_date, '%W, %D %M %Y, %H:%i') AS enter_date,
+                        DATE_FORMAT(h.leave_date, '%W, %D %M %Y, %H:%i') AS leave_date,  
+                        h.duration, pk.place_name 
                         FROM history h
                         JOIN users us ON h.user_id = us.id
                         JOIN parking_area pk ON h.area_id = pk.id
@@ -155,7 +161,10 @@ module.exports = {
         const execption = company ? `AND pk.company_id = ${company}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT h.id, us.username, h.enter_date, h.leave_date, h.duration, pk.place_name 
+            const query = `SELECT h.id, us.username, 
+                        DATE_FORMAT(h.enter_date, '%W, %D %M %Y, %H:%i') AS enter_date,
+                        DATE_FORMAT(h.leave_date, '%W, %D %M %Y, %H:%i') AS leave_date, 
+                        h.duration, pk.place_name 
                         FROM history h
                         JOIN users us ON h.user_id = us.id
                         JOIN parking_area pk ON h.area_id = pk.id
@@ -175,8 +184,11 @@ module.exports = {
         const company = req.query.company === 'null' ? null : parseInt(req.query.company)
         const execption = company ? `WHERE pk.company_id = ${company}` : ''
 
+        // DATE_FORMAT(oa.enter_data, %W, %D %M %Y, %H:%i) AS enter_date
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT oa.id, us.username, oa.enter_date, oa.status, pk.place_name, pk.company_id 
+            const query = `SELECT oa.id, us.username, 
+                        DATE_FORMAT(oa.enter_date, '%W, %D %M %Y, %H:%i') AS enter_date, 
+                        oa.status, pk.place_name, pk.company_id 
                         FROM on_active oa
                         JOIN users us ON oa.user_id = us.id
                         JOIN parking_area pk ON oa.area_id = pk.id
@@ -196,7 +208,9 @@ module.exports = {
         const execption = company ? `AND pk.company_id = ${company}` : ''
         
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT oa.id, us.username, oa.enter_date, oa.status, pk.place_name, pk.company_id 
+            const query = `SELECT oa.id, us.username, 
+                        DATE_FORMAT(oa.enter_date, '%W, %D %M %Y, %H:%i') AS enter_date, 
+                        oa.status, pk.place_name, pk.company_id 
                         FROM on_active oa
                         JOIN users us ON oa.user_id = us.id
                         JOIN parking_area pk ON oa.area_id = pk.id
@@ -217,7 +231,9 @@ module.exports = {
         const execption = company ? `AND pk.company_id = ${company}` : ''
         
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT oa.id, us.username, oa.enter_date, oa.status, pk.place_name, pk.company_id 
+            const query = `SELECT oa.id, us.username, 
+                        DATE_FORMAT(oa.enter_date, '%W, %D %M %Y, %H:%i') AS enter_date, 
+                        oa.status, pk.place_name, pk.company_id 
                         FROM on_active oa
                         JOIN users us ON oa.user_id = us.id
                         JOIN parking_area pk ON oa.area_id = pk.id

@@ -2,20 +2,20 @@
 const router = require('express').Router()
 
 // import verifier
-const { verify } = require ('../helpers/jwt')
+// const { verify } = require ('../helpers/jwt')
 
 // import our controllers
 const { account, profile, vehicles, rating, history, payment } = require('../controllers')
 
 // apply our controllers
 // account : edit username or password
-router.get('/account/', verify, account.getAccountById)
+router.get('/account/:id', account.getAccountById)
 router.patch('/account/edit/username/:id', account.changeUsername)
 router.patch('/account/edit/password/:id', account.changePassword)
 
 // profile
-router.get('/profile', verify, profile.getUserProfileByID)
-router.patch('/profile/:id', profile.editUserProfile)
+router.get('/profile/:id', profile.getUserProfileByID)
+router.patch('/profile/edit/:id', profile.editUserProfile)
 router.patch('/profile/upload/:id', profile.uploadImageProfile)
 
 // vehicle

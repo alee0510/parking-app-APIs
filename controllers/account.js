@@ -19,13 +19,14 @@ module.exports = {
     },
     // edit account : change username or passowrd => NEED login authentication
     changePassword : (req, res) => {
-        // const id = parseInt(req.params.id)
+        const id = parseInt(req.params.id)
         const { oldPassword, newPassword } = req.body
+        console.log(req.body)
 
         connection.databaseQueryWithErrorHandle(res, async () => {
             // do query to get user data
             const getUser = 'SELECT * FROM users WHERE id = ?'
-            const user = await connection.databaseQuery(getUser, req.user.id)
+            const user = await connection.databaseQuery(getUser, id)
 
             // do authentication => password confirmation
             const valid = await bycript.compare(oldPassword, user[0].password)
@@ -45,17 +46,18 @@ module.exports = {
     },
     changeUsername : (req, res) => {
         const id = parseInt(req.params.id)
-        const { username } = req.body // new username
+        // const { username } = req.body // new username
 
         connection.databaseQueryWithErrorHandle(res, async () => {
             // check if new username is avaiable, username cannot be duplicate
             const check = 'SELECT * FROM users WHERE username = ?'
-            const result = await connection.databaseQuery(check, username)
+            const result = await connection.databaseQuery(check, req.body)
+            console.log(result)
             if (result.length !== 0) throw ({code : 400, msg : 'username is already exist.'})
             
             // update username in database
             const update = 'UPDATE users SET ? WHERE id = ?'
-            await connection.databaseQuery(update, [username, id])
+            await connection.databaseQuery(update, [req.body, id])
             
             // send feedback to client-side
             res.status(200).send('username has been updated.')

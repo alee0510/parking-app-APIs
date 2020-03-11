@@ -108,7 +108,9 @@ module.exports = {
         const exception = type ? `WHERE type = ${type}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT th.id, th.date, th.type, th.amount, th.user_id, us.username, th.status 
+            const query = `SELECT th.id, 
+                    DATE_FORMAT(th.date, '%W, %D %M %Y, %H:%i') AS date,
+                    th.type, th.amount, th.user_id, us.username, th.status 
                     FROM transaction_history th
                     JOIN users us ON us.id = th.user_id 
                     ${exception}
@@ -128,7 +130,9 @@ module.exports = {
         const exception = type ? `AND type = ${type}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT th.id, th.date, th.type, th.amount, th.user_id, us.username, th.status 
+            const query = `SELECT th.id, 
+                    DATE_FORMAT(th.date, '%W, %D %M %Y, %H:%i') AS date,
+                    th.type, th.amount, th.user_id, us.username, th.status 
                     FROM transaction_history th
                     JOIN users us ON us.id = th.user_id 
                     WHERE th.id < ? ${exception}
@@ -148,7 +152,9 @@ module.exports = {
         const exception = type ? `AND type = ${type}` : ''
     
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT th.id, th.date, th.type, th.amount, th.user_id, us.username, th.status 
+            const query = `SELECT th.id, 
+                    DATE_FORMAT(th.date, '%W, %D %M %Y, %H:%i') AS date,
+                    th.type, th.amount, th.user_id, us.username, th.status 
                     FROM transaction_history th
                     JOIN users us ON us.id = th.user_id 
                     WHERE th.id > ? ${exception}

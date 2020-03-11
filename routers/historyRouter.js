@@ -13,8 +13,8 @@ router.get('/data/prev', history.getPrevHistory)
 
 router.get('/data/active/total', history.getTotalOnActive )
 router.get('/data/active', history.getInitialOnActive)
-router.get('/data/active/next', history.getNextHistory)
-router.get('/data/active/prev', history.getPrevHistory)
+router.get('/data/active/next', history.getNexOnActive)
+router.get('/data/active/prev', history.getPrevOnActive)
 
 // export our routers
 module.exports = router

@@ -11,8 +11,10 @@ module.exports = {
     // get user profile info by user id => NEED login authentication
     getUserProfileByID : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
+            // const query = `SELECT id, name, image, DATE_FORMAT(birthdate, '%W %D %M %Y') AS birthdate, phone, address 
+            // FROM profiles WHERE id = ?`
             const query = 'SELECT * FROM profiles WHERE id = ?'
-            const result = await connection.databaseQuery(query, req.user.id)
+            const result = await connection.databaseQuery(query, parseInt(req.params.id))
 
             // send feedback to client-side
             res.status(200).send(result[0])
