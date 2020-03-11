@@ -9,7 +9,7 @@ class Connection {
             this.database.query(query, escape, (err, result) => {
                 // if there an any erorr during query process send error code and message
                 if (err) {
-                    reject({code : 500, msg : err.sqlMessage})
+                    reject({ code : 500, msg : err.sqlMessage })
                 } else {
                     resolve(result)
                 }

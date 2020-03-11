@@ -34,5 +34,7 @@ router.get('/wallet/saldo/:id', payment.getSaldo)
 router.patch('/wallet/topup/:id', payment.topUpSaldo)
 // router.patch('/wallet/pay/:id')
 
+// parking : enter and leave including payment transactions
+
 // export our routers
 module.exports = router
