@@ -27,19 +27,19 @@ class Connection {
     // create promisfy using begin transaction
     databaseQueryTransaction = async (res, callback) => {
         try {
-            await database.beginTransaction( async (err) => {
+            await this.database.beginTransaction( async (err) => {
                 if (err) throw err
                 // error handling for our custom function
                 try {
                     await callback()
                 } catch (err) {
-                    await database.rollback() 
+                    await this.database.rollback() 
                     res.status(err.code).send(err.msg) 
                 }
-                await database.commit()
+                await this.database.commit()
             })
         } catch (err) {
-            await database.rollback() 
+            await this.database.rollback() 
         }
     }
     // create query that include file with error handle

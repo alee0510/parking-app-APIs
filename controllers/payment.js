@@ -6,9 +6,11 @@ const connection = require('../helpers/databaseQuery')(database)
 module.exports = {
     // USER : check, top-up saldo, check history transaction
     getSaldo : (req, res) => {
+        // console.log(req.params.id)
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'SELECT * FROM wallet WHERE id = ?'
-            const result = await connection.databaseQuery(query, parseInt(res.params.id))
+            const result = await connection.databaseQuery(query, parseInt(req.params.id))
+            // console.log(result)
 
             // send feedback to client-side
             res.status(200).send(result)
@@ -18,7 +20,9 @@ module.exports = {
         // setup additional data
         // let date = new Date()
         // req.body.date = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
+        req.body.type = 1
         req.body.status = 2 // pending -> paymen need approval from superadmin
+        req.body.user_id = parseInt(req.params.id)
 
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'INSERT INTO transaction_history SET ?'
@@ -78,17 +82,20 @@ module.exports = {
             // get top-up amount
             const chekTopUpAmount = 'SELECT * FROM transaction_history WHERE id = ?'
             const topUpAmount = await connection.databaseQuery(chekTopUpAmount, transactionId)
+            // console.log(topUpAmount)
 
             
             // get user current saldo
             const userId = parseInt(topUpAmount[0].user_id)
-            const checkUserSaldo = 'SELECT * FROM wallet where id = '
+            // console.log(userId)
+            const checkUserSaldo = 'SELECT * FROM wallet WHERE id = ?'
             const currentSaldo = await connection.databaseQuery(checkUserSaldo, userId)
+            // console.log(currentSaldo)
             
             
             // top-up saldo to user wallet
             const saldo = topUpAmount[0].amount + currentSaldo[0].saldo
-            const topUpSaldo = `UPDATE wallet WHERE SET ? user_id = ?`
+            const topUpSaldo = `UPDATE wallet SET ? WHERE id = ?`
             await connection.databaseQuery(topUpSaldo, [{ saldo }, userId])
 
             // change user status transaction
