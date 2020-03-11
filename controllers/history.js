@@ -83,12 +83,13 @@ module.exports = {
         })
     },
     // change status when user leave parking area
+    // IMPORTANT ! => need input duration
     changeOnActiveStatus : (req, res) => {
         const id = parseInt(req.params.id)
         connection.databaseQueryTransaction(res, async () => {
             // change status on on_active table
             const changeStatus = 'UPDATE on_active SET status = 1 WHERE id = ?'
-            await connection.databaseQuery(changeStatus, [req.body.status, id])
+            await connection.databaseQuery(changeStatus, id)
 
             // get log on_active history
             const getLog = 'SELECT * FROM on_active WHERE id = ?'

@@ -43,6 +43,7 @@ router.patch('/wallet/topup/:id', payment.topUpSaldo)
 // parking : enter and leave including payment transactions
 router.post('/parking/pay/:id', payment.payParking)
 router.post('/parking/enter/:id', history.addOnActive)
+router.post('/parking/leave/:id', history.changeOnActiveStatus)
 
 // export our routers
 module.exports = router
