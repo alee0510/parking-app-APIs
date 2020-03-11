@@ -5,7 +5,14 @@ const router = require('express').Router()
 // const { verify } = require ('../helpers/jwt')
 
 // import our controllers
-const { account, profile, vehicles, rating, history, payment } = require('../controllers')
+const { 
+    account, 
+    profile, 
+    vehicles, 
+    rating, 
+    history, 
+    payment 
+} = require('../controllers')
 
 // apply our controllers
 // account : edit username or password
@@ -35,6 +42,7 @@ router.patch('/wallet/topup/:id', payment.topUpSaldo)
 
 // parking : enter and leave including payment transactions
 router.post('/parking/pay/:id', payment.payParking)
+router.post('/parking/enter/:id', history.addOnActive)
 
 // export our routers
 module.exports = router

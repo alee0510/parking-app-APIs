@@ -71,6 +71,7 @@ module.exports = {
         })
     },
     // add user log history when enter parking area
+    // need input user_id and area_id only
     addOnActive : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'INSERT INTO on_active SET ?'
@@ -86,7 +87,7 @@ module.exports = {
         const id = parseInt(req.params.id)
         connection.databaseQueryTransaction(res, async () => {
             // change status on on_active table
-            const changeStatus = 'UPDATE on_active SET ? WHERE id = ?'
+            const changeStatus = 'UPDATE on_active SET status = 1 WHERE id = ?'
             await connection.databaseQuery(changeStatus, [req.body.status, id])
 
             // get log on_active history
@@ -94,7 +95,7 @@ module.exports = {
             const log = await connection.databaseQuery(getLog, id)
 
             // fill history table using data from log and leave data from log
-            log.leave_date = req.body.leave_date
+            // log.leave_date = req.body.leave_date
             log.duration = req.body.duration
             delete log.status
 
