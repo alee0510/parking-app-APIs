@@ -52,7 +52,7 @@ module.exports = {
     },
     // CRUD
     addCarBrand : (req, res) => {
-        connection.databaseQueryWithErrorHandle(req, async () => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'INSERT INTO car_brands SET ?'
             await connection.databaseQuery(query, req.body)
             
@@ -61,13 +61,25 @@ module.exports = {
         })
     },
     editCarBrand : (req, res) => {
-        connection.databaseQueryWithErrorHandle(req, async () => {
-            const query = 'UPDATE car_brands SET ? WHERE id ?'
+        console.log(req.params.id)
+        console.log(req.body.brand)
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'UPDATE car_brands SET ? WHERE id = ?'
             await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
             
             // send feedback to client-side
             res.status(200).send('edit car brand success.')
         })
+    },
+    deleteCarBrand : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'DELETE FROM car_brands WHERE id = ?'
+            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
+            
+            // send feedback to client-side
+            res.status(200).send('delete car brand success.')
+        })
+
     },
     // MOTOR BRANDS
     getTotalMotorBrand : (req, res) => {
@@ -116,7 +128,7 @@ module.exports = {
         })
     },
     addMotorBrand : (req, res) => {
-        connection.databaseQueryWithErrorHandle(req, async () => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'INSERT INTO motor_brands SET ?'
             await connection.databaseQuery(query, req.body)
             
@@ -125,13 +137,23 @@ module.exports = {
         })
     },
     editMotorBrand : (req, res) => {
-        connection.databaseQueryWithErrorHandle(req, async () => {
-            const query = 'UPDATE motor_brands SET ? WHERE id ?'
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'UPDATE motor_brands SET ? WHERE id = ?'
             await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
             
             // send feedback to client-side
             res.status(200).send('edit motor brand success.')
         })
+    },
+    deleteMotorBrand : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'DELETE FROM motor_brands WHERE id = ?'
+            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
+            
+            // send feedback to client-side
+            res.status(200).send('delete motor brand success.')
+        })
+
     },
     // CAR & MOTOR TYPE : get, add, and edit
     getTotalCarType : (req, res) => {
@@ -183,7 +205,7 @@ module.exports = {
         })
     },
     addCarType : (req, res) => {
-        connection.databaseQueryWithErrorHandle(req, async () => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'INSERT INTO car_types SET ?'
             await connection.databaseQuery(query, req.body)
             
@@ -192,12 +214,21 @@ module.exports = {
         })
     },
     editCarType : (req, res) => {
-        connection.databaseQueryWithErrorHandle(req, async () => {
-            const query = 'UPDATE car_types SET ? WHERE id ?'
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'UPDATE car_types SET ? WHERE id = ?'
             await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
             
             // send feedback to client-side
             res.status(200).send('edit car types success.')
+        })
+    },
+    deleteCarType : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'DELETE FROM car_types WHERE id = ?'
+            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
+            
+            // send feedback to client-side
+            res.status(200).send('delete car types success.')
         })
     },
     // MOTOR TYPES
@@ -254,7 +285,7 @@ module.exports = {
         })
     },
     addMotorType : (req, res) => {
-        connection.databaseQueryWithErrorHandle(req, async () => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'INSERT INTO motor_types SET ?'
             await connection.databaseQuery(query, req.body)
             
@@ -263,12 +294,42 @@ module.exports = {
         })
     },
     editMotorType : (req, res) => {
-        connection.databaseQueryWithErrorHandle(req, async () => {
-            const query = 'UPDATE motor_types SET ? WHERE id ?'
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'UPDATE motor_types SET ? WHERE id = ?'
             await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
             
             // send feedback to client-side
             res.status(200).send('edit motor type success.')
+        })
+    },
+    deleteMotorType : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'DELETE FROM motor_types WHERE id = ?'
+            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
+            
+            // send feedback to client-side
+            res.status(200).send('delete motor type success.')
+        })
+        
+    },
+
+    // get all data brands
+    getAllCarBrand : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `SELECT * FROM car_brands`
+            const result = await connection.databaseQuery(query)
+
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
+    },
+    getAllMotorBrand : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `SELECT * FROM motor_brands`
+            const result = await connection.databaseQuery(query)
+
+            // send feedback to client-side
+            res.status(200).send(result)
         })
     },
 }

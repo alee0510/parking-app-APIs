@@ -25,5 +25,12 @@ router.get('/vehicle/motor/types/next', vehicles.getNextMotorType)
 router.get('/vehicle/motor/types/prev', vehicles.getPrevMotorType)
 router.get('/vehicle/motor/types/total', vehicles.getTotalMotorType)
 
+// get all brands
+router.get('/vehicle/car/brands/all', vehicles.getAllCarBrand)
+router.get('/vehicle/motor/brands/all', vehicles.getAllMotorBrand)
+
+// CRUD OPERATION
+router.patch('/vehicle/car/brands/edit/:id', vehicles.editCarBrand)
+
 // export our routers
 module.exports = router
