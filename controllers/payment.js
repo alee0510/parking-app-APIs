@@ -66,6 +66,8 @@ module.exports = {
             const addLogHistory = `INSERT INTO transaction_history SET ?`
             await connection.databaseQuery(addLogHistory, data)
 
+            // OPTIONAL : send email receipt
+
             // send feedback to client-side
             res.status(200).send('payment success.')
         })

@@ -61,14 +61,13 @@ app.use('/api/history', historyRouter)
 app.use('/api/payment', paymentRouter)
 app.use('/api/parking', parkingAreaRouter)
 app.use('/api/partner', partnerRouter)
+
+// api mobile
 app.use('/api/mobile', mobileRouter)
 app.use('/api/mobile/2fa', OTPRouter)
 
-// api mobile
-
-
-console.log('secret token : ', process.env.SECRET_TOKEN)
-console.log('pass', process.env.PASS)
+// console.log('secret token : ', process.env.SECRET_TOKEN)
+// console.log('pass', process.env.PASS)
 
 // binding our server to port
 const PORT = process.env.PORT || 2000
