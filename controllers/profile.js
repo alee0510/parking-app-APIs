@@ -1,10 +1,12 @@
 // import module
 const fileSystem = require('fs')
+const path = require('path')
 
 // setup connection
 const database = require('../database')
 const connection = require('../helpers/databaseQuery')(database)
-const DIRECTORY = '../public/profiles/'
+
+const PATH = './public'
 
 // export controllers
 module.exports = {
@@ -29,28 +31,37 @@ module.exports = {
             res.status(200).send('your profile has been updated.')
         })
     },
-    uploadImageProfile : (req, res) => {
-        connection.databaseQueryWithErrorHandle(res, async () => {
-            // check image file from request
+    uploadImageProfile : async (req, res) => {
+        const id = parseInt(req.params.id)
+        console.log(req.file)
+        try {
+            // check file image from request
             if (!req.file) throw ({code : 400, msg : 'image doesn\'t exist.'})
 
-            // check user image path in database
+            // check user image path in database if exist
             const getPath = 'SELECT * FROM profiles WHERE id = ?'
-            const result = await connection.databaseQuery(getPath, req.user.id)
+            const result = await connection.databaseQuery(getPath, id)
 
-            // get image file path
+            // get image file path from request
             const image = req.file.path.split('\\').splice(1).join('/')
-            
-            // do query update
+            console.log(image)
+
+            // do query to update image profile
             const update = 'UPDATE profiles SET image = ? WHERE id = ?'
-            await connection.databaseQuery(update, [image, req.user.id])
-            
+            await connection.databaseQuery(update, [image, id])
+
             // check old profile image file in public folder => if exist delete it
-            if (result[0].image) fileSystem.unlinkSync(DIRECTORY + result[0].image)
+            if (result[0].image) {
+                fileSystem.unlinkSync(path.join(PATH, result[0].image))
+            }
 
             // send feedback to client-side
-            res.status(200).send('image profile has been updated.')
-        })
+            res.status(200).send('ok')
+
+        } catch (err) {
+            fileSystem.unlinkSync(req.file.path)
+            res.status(err.code).send(err.msg)
+        }
     }
 }
 

@@ -10,8 +10,8 @@ const _this = module.exports = {
         // storage setup
         const storage = multer.diskStorage({
             destination : folder,
-            filename : (req, res, callback) => {
-                callback(null, file.filename + '-' + Date.now() + path.extname(file.originalname))
+            filename : (req, file, callback) => {
+                callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
             }
         })
         return multer({
