@@ -1,6 +1,7 @@
 // setup connection
 const database = require('../database')
 const connection = require('../helpers/databaseQuery')(database)
+const transporter = require('../helpers/nodemailer')
 
 // export controllers
 module.exports = {
@@ -66,7 +67,23 @@ module.exports = {
             const addLogHistory = `INSERT INTO transaction_history SET ?`
             await connection.databaseQuery(addLogHistory, data)
 
-            // OPTIONAL : send email receipt
+            // OPTIONAL : send invoice receipt
+            const message = `<h1>Invoice</h1>
+                        <br/>
+                        <h3>Payment type = parking</h3>
+                        <h3>Total = ${totalPayment}</h3>
+                        <h3>Thank you.</h3>
+                        `
+            // mail option
+            const mailOption = {
+                from : `admin <ali.muksin0510@gmail.com>`, // sender address
+                to : `${req.body.email}`,
+                subject : 'Invoice',
+                text : '',
+                html : message
+            }
+            // send mail
+            await transporter.sendMail(mailOption)
 
             // send feedback to client-side
             res.status(200).send('payment success.')
@@ -103,7 +120,31 @@ module.exports = {
             // change user status transaction
             const approveStatus = 'UPDATE transaction_history SET status = 1 WHERE id = ?'
             await connection.databaseQuery(approveStatus, transactionId)
-            
+
+            // OPTIONAL : send invoice receipt
+            // get user email
+            const getUser = 'SELECT * FROM users WHERE id = ?'
+            const user = await connection.databaseQuery(getUser, userId)
+
+            // mail message
+            const message = `<h1>Invoice</h1>
+                            <br/>
+                            <h3>Payment type = top up</h3>
+                            <h3>Total = ${topUpAmount[0].amount}</h3>
+                            <h3>Thank you.</h3>
+                            `
+            // mail option
+            const mailOption = {
+                from : `admin <ali.muksin0510@gmail.com>`, // sender address
+                to : `${user[0].email}`,
+                subject : 'Invoice',
+                text : '',
+                html : message
+            }
+
+            // send mail
+            await transporter.sendMail(mailOption)
+
             // send feedback to client-side
             res.status(200).send('top-up approval success.')
         })
