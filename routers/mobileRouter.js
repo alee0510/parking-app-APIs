@@ -39,6 +39,7 @@ router.get('/history/:id', history.getHistoryByUser)
 // wallet
 router.get('/wallet/saldo/:id', payment.getSaldo)
 router.patch('/wallet/topup/:id', payment.topUpSaldo)
+router.get('/wallet/history/:id', payment.checkTransactionHistory)
 
 // parking : enter and leave including payment transactions
 router.post('/parking/pay/:id', payment.payParking)

@@ -96,7 +96,7 @@ module.exports = {
 
         connection.databaseQueryTransaction(res, async () => {
             // do authorization
-            if (parseInt(req.user.role) !== 1) throw({code : 401, msg : 'access denied.'})
+            // if (parseInt(req.user.role) !== 1) throw({code : 401, msg : 'access denied.'})
 
             // get top-up amount
             const chekTopUpAmount = 'SELECT * FROM transaction_history WHERE id = ?'
@@ -136,7 +136,7 @@ module.exports = {
             // mail option
             const mailOption = {
                 from : `admin <ali.muksin0510@gmail.com>`, // sender address
-                to : `${user[0].email}`,
+                to : 'ali.sakra94@gmail.com',//`${user[0].email}`,
                 subject : 'Invoice',
                 text : '',
                 html : message

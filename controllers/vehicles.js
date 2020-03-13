@@ -74,7 +74,7 @@ module.exports = {
     deleteCarBrand : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'DELETE FROM car_brands WHERE id = ?'
-            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
+            await connection.databaseQuery(query, parseInt(req.params.id))
             
             // send feedback to client-side
             res.status(200).send('delete car brand success.')
@@ -148,7 +148,7 @@ module.exports = {
     deleteMotorBrand : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'DELETE FROM motor_brands WHERE id = ?'
-            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
+            await connection.databaseQuery(query, parseInt(req.params.id))
             
             // send feedback to client-side
             res.status(200).send('delete motor brand success.')
@@ -225,7 +225,7 @@ module.exports = {
     deleteCarType : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'DELETE FROM car_types WHERE id = ?'
-            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
+            await connection.databaseQuery(query, parseInt(req.params.id))
             
             // send feedback to client-side
             res.status(200).send('delete car types success.')
@@ -305,7 +305,7 @@ module.exports = {
     deleteMotorType : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'DELETE FROM motor_types WHERE id = ?'
-            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
+            await connection.databaseQuery(query, parseInt(req.params.id))
             
             // send feedback to client-side
             res.status(200).send('delete motor type success.')
