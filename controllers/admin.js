@@ -10,16 +10,14 @@ module.exports = {
         console.log(req.query)
 
         // define exception
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        console.log(on)
-        
-        if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
-        const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
+        const role = [undefined, 'null'].includes(req.query.role) ? null : parseInt(req.query.role)
+        if (![2, 3, null].includes(role)) return res.status(404).send('user role not found.')
+        const exception = `role ${!role ? ' != 1' : role === 2 ? ' = 2' : ' = 3'}`
 
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
             const getFirstData = `SELECT * FROM users 
-                                WHERE ${only}
+                                WHERE ${exception}
                                 ORDER BY id DESC LIMIT ?`
             const result = await connection.databaseQuery(getFirstData, parseInt(req.query.limit))
 
@@ -34,14 +32,14 @@ module.exports = {
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
 
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
-        const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
+        const role = [undefined, 'null'].includes(req.query.role) ? null : parseInt(req.query.role)
+        if (![2, 3, null].includes(role)) return res.status(404).send('user role not found.')
+        const exception = `role ${!role ? ' != 1' : role === 2 ? ' = 2' : ' = 3'}`
 
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
             const getNextData = `SELECT * FROM users 
-                                WHERE ${only} AND id < ?
+                                WHERE ${exception} AND id < ?
                                 ORDER BY id DESC LIMIT ?`
             const result = await connection.databaseQuery(getNextData, [id, limit])
 
@@ -56,14 +54,14 @@ module.exports = {
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
 
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
-        const only = `role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
+        const role = [undefined, 'null'].includes(req.query.role) ? null : parseInt(req.query.role)
+        if (![2, 3, null].includes(role)) return res.status(404).send('user role not found.')
+        const exception = `role ${!role ? ' != 1' : role === 2 ? ' = 2' : ' = 3'}`
 
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
             const getPrevData = `SELECT * FROM users
-                                WHERE ${only} AND id > ?
+                                WHERE ${exception} AND id > ?
                                 ORDER BY id ASC LIMIT ?`
             const result = await connection.databaseQuery(getPrevData, [id, limit])
 
@@ -76,9 +74,9 @@ module.exports = {
         console.log(req.query)
         
         // define exception
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
-        const only = `us.role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
+        const role = [undefined, 'null'].includes(req.query.role) ? null : parseInt(req.query.role)
+        if (![2, 3, null].includes(role)) return res.status(404).send('user role not found.')
+        const exception = `role ${!role ? ' != 1' : role === 2 ? ' = 2' : ' = 3'}`
         
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
@@ -86,7 +84,7 @@ module.exports = {
                                     pf.image, pf.birthdate, pf.phone, pf.address 
                                     FROM users us
                                     JOIN profiles pf ON us.id = pf.id
-                                    WHERE ${only}
+                                    WHERE ${exception}
                                     ORDER BY pf.id DESC LIMIT ?`
             const result = await connection.databaseQuery(getProfileData, parseInt(req.query.limit))
 
@@ -101,9 +99,9 @@ module.exports = {
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
 
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
-        const only = `us.role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
+        const role = [undefined, 'null'].includes(req.query.role) ? null : parseInt(req.query.role)
+        if (![2, 3, null].includes(role)) return res.status(404).send('user role not found.')
+        const exception = `role ${!role ? ' != 1' : role === 2 ? ' = 2' : ' = 3'}`
 
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
@@ -111,7 +109,7 @@ module.exports = {
                                     pf.image, pf.birthdate, pf.phone, pf.address 
                                     FROM users us
                                     JOIN profiles pf ON us.id = pf.id
-                                    WHERE ${only} AND pf.id < ?
+                                    WHERE ${exception} AND pf.id < ?
                                     ORDER BY pf.id DESC LIMIT ?`
             const result = await connection.databaseQuery(getNextProfileData, [id, limit])
 
@@ -126,9 +124,9 @@ module.exports = {
         const id = parseInt(req.query.id)
         const limit = parseInt(req.query.limit)
 
-        const on = req.query.only === 'null' ? null : parseInt(req.query.only)
-        if (![2, 3, null].includes(on)) return res.status(404).send('user role not found.')
-        const only = `us.role ${!on ? ' != 1' : on === 2 ? ' = 2' : ' = 3'}`
+        const role = [undefined, 'null'].includes(req.query.role) ? null : parseInt(req.query.role)
+        if (![2, 3, null].includes(role)) return res.status(404).send('user role not found.')
+        const exception = `role ${!role ? ' != 1' : role === 2 ? ' = 2' : ' = 3'}`
 
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
@@ -136,7 +134,7 @@ module.exports = {
                                     pf.image, pf.birthdate, pf.phone, pf.address 
                                     FROM users us
                                     JOIN profiles pf ON us.id = pf.id
-                                    WHERE ${only} AND pf.id > ?
+                                    WHERE ${exception} AND pf.id > ?
                                     ORDER BY pf.id ASC LIMIT ?`
             const result = await connection.databaseQuery(getPrevProfileData, [id, limit])
 
@@ -208,9 +206,9 @@ module.exports = {
 
 /* NOTE : all superadmin features need authentication and authorization
 superadmin features : access all users data and activity plus change user role
-'only' paramater is used to define what user role want in request
+'role' paramater is used to define what user role want in request
  - none : get all data including admin
- - 2 : gett admin data only, 
- - 3 : get user data only */
+ - 2 : gett admin data role, 
+ - 3 : get user data role */
 
 // NOTE : for test purpose : authorization or authentication is temporray disabled
