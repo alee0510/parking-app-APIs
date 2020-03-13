@@ -37,5 +37,12 @@ router.delete('/vehicle/car/brands/delete/:id', vehicles.deleteCarBrand)
 router.post('/vehicle/car/types/add', vehicles.addCarType)
 router.delete('/vehicle/car/types/delete/:id', vehicles.deleteCarType)
 
+router.patch('/vehicle/motor/brands/edit/:id', vehicles.editMotorBrand)
+router.patch('/vehicle/motor/types/edit/:id', vehicles.editMotorType)
+router.post('/vehicle/motor/brands/add', vehicles.addMotorBrand)
+router.delete('/vehicle/motor/brands/delete/:id', vehicles.deleteMotorBrand)
+router.post('/vehicle/motor/types/add', vehicles.addMotorType)
+router.delete('/vehicle/motor/types/delete/:id', vehicles.deleteMotorType)
+
 // export our routers
 module.exports = router
