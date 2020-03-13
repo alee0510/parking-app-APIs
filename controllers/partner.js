@@ -15,13 +15,31 @@ module.exports = {
             res.status(200).send(result)
         })
     },
-    deletePartners : (req, res) => {
+    deletePartner : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `DELETE FROM partners WHERE id = ?`
-            await connection.databaseQuery(query)
+            await connection.databaseQuery(query, parseInt(req.params.id))
             
             // send feedback to client-side
             res.status(200).send('partner has been delete.')
+        })
+    },
+    addPartner : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'INSERT INTO partners SET ?'
+            await connection.databaseQuery(query, req.body)
+            
+            // send feedback to client-side
+            res.status(200).send('partner has been added.')
+        })
+    },
+    editPartner : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'UPDATE partners SET ? WHERE id = ?'
+            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
+
+            // send feedback to client-side
+            res.status(200).send('partner has been updated.')
         })
     }
 }
