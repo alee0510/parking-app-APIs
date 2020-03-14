@@ -11,7 +11,8 @@ const {
     vehicles, 
     rating, 
     history, 
-    payment 
+    payment,
+    users
 } = require('../controllers')
 
 // apply our controllers
@@ -19,6 +20,7 @@ const {
 router.get('/account/:id', account.getAccountById)
 router.patch('/account/edit/username/:id', account.changeUsername)
 router.patch('/account/edit/password/:id', account.changePassword)
+router.post('/account/confirm/:id', users.passwordConfirm)
 
 // profile
 router.get('/profile/:id', profile.getUserProfileByID)

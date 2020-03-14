@@ -82,6 +82,22 @@ module.exports = {
             // send feedback to client-side
             res.status(200).send(result[0])
         })
+    },
+    passwordConfirm : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            // get user password from database
+            const getInfo = `SELECT * FROM users WHERE id = ?`
+            const result = await connection.databaseQuery(getInfo, parseInt(req.params.id))
+            console.log(result)
+
+            // password authentication
+            const valid = await bycript.compare(req.body.password, result[0].password)
+            if(!valid) throw({code : 400, msg : 'invalid password.'})
+            console.log(valid)
+
+            // send feedback to client-side
+            res.status(200).send({valid})
+        })
     }
 }
 
