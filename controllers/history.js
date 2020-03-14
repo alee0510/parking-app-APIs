@@ -52,7 +52,7 @@ module.exports = {
             const history = await connection.databaseQuery(getHistory, id)
 
             // if user doesn't has history yet
-            if (history.length === 0) return res.status(2000).send([])
+            if (history.length === 0) return res.status(200).send([])
 
             // get user vehicle type
             const getVehicleType = `SELECT vehicle_type FROM vehicles WHERE user_id = ?`
