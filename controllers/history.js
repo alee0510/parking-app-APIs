@@ -42,7 +42,6 @@ module.exports = {
     // USER : GET History by id and total cost by duration per-10 minutes
     getHistoryByUser : (req, res) => {
         const id = parseInt(req.params.id)
-        // console.log(id)
         connection.databaseQueryWithErrorHandle(res, async () => {
             // get user history
             const getHistory = `SELECT h.id, us.username, h.area_id, h.enter_date, h.leave_date, h.duration, pk.place_name 
@@ -51,7 +50,9 @@ module.exports = {
                             JOIN parking_area pk ON h.area_id = pk.id
                             WHERE us.id = ?`
             const history = await connection.databaseQuery(getHistory, id)
-            console.log(history)
+
+            // if user doesn't has history yet
+            if (history.length === 0) return res.status(2000).send([])
 
             // get user vehicle type
             const getVehicleType = `SELECT vehicle_type FROM vehicles WHERE user_id = ?`

@@ -7,7 +7,7 @@ module.exports = {
     // USER : GEt rating by user
     getRatingByUser : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = 'SELECT * FROM ratings WHERE id ?'
+            const query = 'SELECT * FROM ratings WHERE id = ?'
             const result = await connection.databaseQuery(query, parseInt(req.params.id))
 
             // send feedback to client-side
