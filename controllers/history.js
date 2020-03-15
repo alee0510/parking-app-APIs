@@ -3,7 +3,10 @@ const database = require('../database')
 const connection = require('../helpers/databaseQuery')(database)
 
 // export controllers
-module.exports = {
+const _this = module.exports = {
+    findCost : (arr, id) => {
+        return arr.filter( obj => obj.id === parseInt(id))[0]
+    },
     // get total data
     getTotalHistory : (req, res) => {
         // do athorization to define exception
@@ -48,26 +51,30 @@ module.exports = {
                             FROM history h
                             JOIN users us ON h.user_id = us.id
                             JOIN parking_area pk ON h.area_id = pk.id
-                            WHERE us.id = ?`
+                            WHERE h.user_id = ?`
             const history = await connection.databaseQuery(getHistory, id)
+            console.log(history)
 
             // if user doesn't has history yet
-            if (history.length === 0) return res.status(200).send([])
+            if (history.length === 0) throw Err([], 200)
 
             // get user vehicle type
             const getVehicleType = `SELECT vehicle_type FROM vehicles WHERE user_id = ?`
             const vehicle = await connection.databaseQuery(getVehicleType, id)
+            history.map(item => item.type = parseInt(vehicle[0].vehicle_type) === 1 ? 'car' : 'motorcycle')
+            console.log(vehicle)
 
             // get cost
-            const areaId = `(${history.map(item => item.area_id).join(',')})`
-            const getCost = `SELECT car_cost, motor_cost FROM parking_area where id IN ${areaId}`
+            const areaId = `(${[...new Set(history.map(item => item.area_id))].join(',')})`
+            console.log(areaId)
+            const getCost = `SELECT id, car_cost, motor_cost FROM parking_area where id IN ${areaId} `
             const cost = await connection.databaseQuery(getCost)
+            console.log(cost)
 
-            // get total cost by vehicle type, 1 = car and 2 = motor
-            history.map((item, index) => item.total_cost = vehicle === 1 ? (item.duration/10)*cost[index].car_cost 
-            : (item.duration/10)*cost[index].motor_cost)
+            history.map(item => item.total_cost = vehicle === 1 ? (item.duration/10)*_this.findCost(cost, item.area_id).car_cost
+            : (item.duration/10)*_this.findCost(cost, item.area_id).motor_cost)
 
-            // send feedback to client side
+            console.log(history)
             res.status(200).send(history)
         })
     },
