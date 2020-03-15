@@ -3,8 +3,8 @@ const mysql = require('mysql')
 
 // create connection
 const database = mysql.createConnection({
-    host : "localhost",
-    user : "alee",
+    host : process.env.HOST_IP,
+    user : process.env.NAME,
     password : process.env.PASS,
     database : "db_parking_app",
     port : 3306
