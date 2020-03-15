@@ -56,7 +56,7 @@ const _this = module.exports = {
             console.log(history)
 
             // if user doesn't has history yet
-            if (history.length === 0) throw Err([], 200)
+            if (history.length === 0) throw ({code : 200, msg : []})
 
             // get user vehicle type
             const getVehicleType = `SELECT vehicle_type FROM vehicles WHERE user_id = ?`
