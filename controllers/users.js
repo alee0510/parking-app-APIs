@@ -100,7 +100,7 @@ module.exports = {
             res.status(200).send({valid})
         })
     },
-    requestOTP : (req, res) => {
+    requestOTP : async (req, res) => {
         const phone = req.body.phone
         try {
             // send otp request
