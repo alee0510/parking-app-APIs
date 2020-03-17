@@ -17,6 +17,8 @@ const {
 } = require('../controllers')
 
 // apply our controllers
+// register process : OTP authentication
+
 // account : edit username or password
 router.get('/account/:id', account.getAccountById)
 router.patch('/account/edit/username/:id', account.changeUsername)
