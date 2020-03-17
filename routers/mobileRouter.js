@@ -18,6 +18,8 @@ const {
 
 // apply our controllers
 // register process : OTP authentication
+router.post('/OTP/request', users.requestOTP)
+router.post('/OTP/verify/:id', users.checkOTP)
 
 // account : edit username or password
 router.get('/account/:id', account.getAccountById)

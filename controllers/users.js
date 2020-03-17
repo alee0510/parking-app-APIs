@@ -118,11 +118,12 @@ module.exports = {
     },
     checkOTP : (req, res) => {
         // get request_id, pin code, and password confirmation
+        const phone = req.body.phone
         const request_id = req.body.reqId
         const pin = req.body.pin
         const id = parseInt(req.params.id)
 
-        connection.databaseQueryWithErrorHandle(res, async () => {
+        connection.databaseQueryTransaction(res, async () => {
             // check OTP
             const result = await check(request_id, pin)
             console.log(result)
@@ -131,9 +132,12 @@ module.exports = {
             // if status != 0 it means pin code is invalid
             if (status !== 0) throw ({ code : 400, msg : 'invalid pin code.'})
 
-            // change user status at database
-            const query = 'UPDATE users SET status = 1 WHERE id = ?'
-            await connection.databaseQuery(query, id)
+            // change user status at database, add verified phone number and status
+            const setStatus = 'UPDATE users SET status = 1 WHERE id = ?'
+            await connection.databaseQuery(setStatus, id)
+
+            const setPhone = 'UPDATE profiles set phone = ? WHERE id = ?'
+            await connection.databaseQuery(setPhone, [phone, id])
 
             // send feedback to client-side
             res.status(200).send('activation success.')
