@@ -129,7 +129,7 @@ module.exports = {
             const status = result.status
 
             // if status != 0 it means pin code is invalid
-            if (status !== 0) throw ({ code : 400, msg : {'invalid pin code.'}})
+            if (status !== 0) throw ({ code : 400, msg : 'invalid pin code.'})
 
             // change user status at database
             const query = 'UPDATE users SET status = 1 WHERE id = ?'
