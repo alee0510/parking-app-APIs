@@ -57,5 +57,6 @@ module.exports = {
             // send feedback to client-side
             res.status(200).send('area has been edited.')
         })
-    }
+    },
+    // add photos
 }

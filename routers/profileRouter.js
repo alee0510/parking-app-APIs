@@ -1,6 +1,6 @@
 // import module
 const router = require('express').Router()
-const PATH = './public/assets'
+const PATH = './public/profiles'
 
 // import multer setup
 const { upload } = require('../helpers/multerSetup')
