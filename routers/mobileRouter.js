@@ -12,7 +12,8 @@ const {
     rating, 
     history, 
     payment,
-    users
+    users,
+    parking_area
 } = require('../controllers')
 
 // apply our controllers
@@ -44,6 +45,7 @@ router.patch('/wallet/topup/:id', payment.topUpSaldo)
 router.get('/wallet/history/:id', payment.checkTransactionHistory)
 
 // parking : enter and leave including payment transactions
+router.get('/parking/area', parking_area.getParkingAreaData)
 router.post('/parking/pay/:id', payment.payParking)
 router.post('/parking/enter/:id', history.addOnActive)
 router.post('/parking/leave/:id', history.changeOnActiveStatus)
