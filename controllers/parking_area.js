@@ -18,7 +18,8 @@ module.exports = {
                         FROM parking_area pk
                         JOIN partners p ON p.id = pk.company_id ${execption}`
             const data = await connection.databaseQuery(getData)
-            console.log(data)
+            // const get = JSON.parse(data[0].coordinates)
+            // console.log(get.latitude)
 
             // send feedback to client side
             res.status(200).send(data)
