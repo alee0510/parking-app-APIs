@@ -50,13 +50,19 @@ module.exports = {
     },
     // edit parking area
     editParkingArea : (req, res) => {
+        const id = parseInt(req.params.id)
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `UPDATE FROM parking_area WHERE company_id = ? and id = ?`
-            await connection.databaseQuery(query)
+            const query = `UPDATE FROM parking_area SET ? WHERE id = ?`
+            await connection.databaseQuery(query, [req.body, id])
             
             // send feedback to client-side
             res.status(200).send('area has been edited.')
         })
     },
     // add photos
+    addPhoto : (req, res) => {
+        // get area_id
+        const id = parseInt(req.params.id)
+        console.log(req.file)
+    }
 }
