@@ -1,6 +1,7 @@
 // import module
 const bycript = require('bcryptjs')
 const jwt = require('../helpers/jwt')
+const { verify, check } = require('../helpers/nexmo')
 
 // setup connection
 const database = require('../database')
@@ -97,6 +98,45 @@ module.exports = {
 
             // send feedback to client-side
             res.status(200).send({valid})
+        })
+    },
+    requestOTP : (req, res) => {
+        const phone = req.body.phone
+        try {
+            // send otp request
+            const result = await verify(phone)
+            console.log(result)
+    
+            // get request id
+            const request_id = result.request_id
+    
+            // send feedback to client-side
+            res.status(200).send({ request_id })
+        } catch (err) {
+            console.log(err)
+        }
+    },
+    checkOTP : (req, res) => {
+        // get request_id, pin code, and password confirmation
+        const request_id = req.body.reqId
+        const pin = req.body.pin
+        const id = parseInt(req.params.id)
+
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            // check OTP
+            const result = await check(request_id, pin)
+            console.log(result)
+            const status = result.status
+
+            // if status != 0 it means pin code is invalid
+            if (status !== 0) throw ({ code : 400, msg : {'invalid pin code.'}})
+
+            // change user status at database
+            const query = 'UPDATE users SET status = 1 WHERE id = ?'
+            await connection.databaseQuery(query, id)
+
+            // send feedback to client-side
+            res.status(200).send('activation success.')
         })
     }
 }
