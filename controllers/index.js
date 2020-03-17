@@ -9,7 +9,6 @@ const payment = require('./payment')
 const vehicles = require('./vehicles')
 const parking_area = require('./parking_area')
 const partner = require('./partner')
-const OTPDemo = require('./2faDemo')
 
 // export controllers
 module.exports = { 
@@ -22,6 +21,5 @@ module.exports = {
     payment, 
     vehicles, 
     parking_area,
-    partner,
-    OTPDemo 
+    partner
 }

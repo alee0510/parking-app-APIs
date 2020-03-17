@@ -48,7 +48,6 @@ const { adminRouter,
     parkingAreaRouter,
     partnerRouter,
     mobileRouter,
-    OTPRouter
 } = require('./routers')
 
 // api web
@@ -64,7 +63,6 @@ app.use('/api/partner', partnerRouter)
 
 // api mobile
 app.use('/api/mobile', mobileRouter)
-app.use('/api/mobile/2fa', OTPRouter)
 
 // console.log('secret token : ', process.env.SECRET_TOKEN)
 // console.log('pass', process.env.PASS)
