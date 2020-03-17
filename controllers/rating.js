@@ -7,8 +7,12 @@ module.exports = {
     // USER : GEt rating by user
     getRatingByUser : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = 'SELECT * FROM ratings WHERE id = ?'
+            const query = 'SELECT * FROM ratings WHERE user_id = ?'
             const result = await connection.databaseQuery(query, parseInt(req.params.id))
+            console.log(result)
+
+            // if user does'nt has rating records
+            if (result.length === 0) throw({ code  : 200, msg : [] })
 
             // send feedback to client-side
             res.status(200).send(result)
