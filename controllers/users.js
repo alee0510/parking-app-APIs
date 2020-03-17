@@ -47,7 +47,7 @@ module.exports = {
     regisVehicleInfo : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'INSERT INTO vehicles SET ?'
-            await connection.databaseQuery(query)
+            await connection.databaseQuery(query, req.body)
 
             // send feedback to client side
             res.status(200).send('vehicle register success.')
