@@ -43,12 +43,20 @@ module.exports = {
     },
     // delete parking area : parameter from query
     deleteParkingArea : (req, res) => {
-        const company_id = parseInt(req.query.companyid)
-        const area_id = parseInt(req.query.areaid)
-
+        const id = parseInt(req.params.id)
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = 'DELETE FROM parking_area WHERE company_id = ? and id = ?'
-            await connection.databaseQuery(query, [company_id, area_id])
+            // get image and delete from our APIs directory
+            const getData = 'SELECT * FROM parking_area WHERE id = ?'
+            const data = await connection.databaseQuery(getData, id)
+
+            // check if data has image path, if yes, then delete it
+            if (data[0].image) {
+                fileSystem.unlinkSync(path.join(PATH, data[0].image))
+            }
+
+            // do query delete
+            const query = 'DELETE FROM parking_area WHERE id = ?'
+            await connection.databaseQuery(query, id)
 
             // send feedback to client-side
             res.status(200).send('area has been deleted.')

@@ -65,12 +65,25 @@ module.exports = {
             const valid = await bycript.compare(req.body.password, result[0].password)
             if (!valid) throw({code : 400, msg : 'invalid password.'})
 
+            // prepare token data
+            const data = { 
+                id : result[0].id, 
+                role : result[0].role, 
+                status : result[0].status 
+            }
+
+            // check if user was admin
+            if ([1, 2].includes(parseInt(result[0].role))) {
+                const getCompanyId = 'SELECT * FROM partners WHERE user_id = ?'
+                const companyId = await connection.databaseQuery(getCompanyId, result[0].id)
+                data.company_id = companyId[0].id
+            }
+
             // create token
-            const { id, role, status } = result[0]
-            const token = jwt.createToken({id, role, status})
+            const token = jwt.createToken(data)
 
             // send feedback (token) to client-side
-            res.header('Auth-Token', token).send(result[0])
+            res.header('Auth-Token', token).send(data)
         })
     },
     // keep login
@@ -79,6 +92,13 @@ module.exports = {
             // do query to always provide data to user
             const query = 'SELECT * FROM users WHERE id = ?'
             const result = await connection.databaseQuery(query, req.user.id)
+
+            // check if user was admin
+            if ([1, 2].includes(parseInt(result[0].role))) {
+                const getCompanyId = 'SELECT * FROM partners WHERE user_id = ?'
+                const companyId = await connection.databaseQuery(getCompanyId, result[0].id)
+                result[0].company_id = companyId[0].id
+            }
 
             // send feedback to client-side
             res.status(200).send(result[0])
