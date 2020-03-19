@@ -14,7 +14,7 @@ module.exports = {
             // console.log(result)
 
             // send feedback to client-side
-            res.status(200).send(result)
+            res.status(200).send(result[0])
         })
     },
     topUpSaldo : (req, res) => {
