@@ -26,11 +26,11 @@ app.use(urlLogger)
 // set public folder to save or access all assets
 app.use(express.static('public'))
 
-// setup database
-database.connect(err => {
-    if (err) return console.log('error connecting : ', err.stack)
-    console.log('connected as id : ', database.threadId)
-})
+// setup database for single connection
+// database.connect(err => {
+//     if (err) return console.log('error connecting : ', err.stack)
+//     console.log('connected as id : ', database.threadId)
+// })
 
 // home route
 app.get('/', (req, res) => {
