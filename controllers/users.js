@@ -77,13 +77,14 @@ module.exports = {
                 const getCompanyId = 'SELECT * FROM partners WHERE user_id = ?'
                 const companyId = await connection.databaseQuery(getCompanyId, result[0].id)
                 data.company_id = companyId[0].id
+                result[0].company_id = companyId[0].id
             }
 
             // create token
             const token = jwt.createToken(data)
 
             // send feedback (token) to client-side
-            res.header('Auth-Token', token).send(data)
+            res.header('Auth-Token', token).send(result[0])
         })
     },
     // keep login
