@@ -15,10 +15,10 @@
 // const role = ['admin', 'user']
 // if (role.includes('superadmin')) console.log('yes')
 
-// // date module
-let date = new Date()
-const today = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`
-console.log(today)
+// // // date module
+// let date = new Date()
+// const today = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`
+// console.log(today)
 
 // // array statements
 // let arr = [1, 3, 4]
@@ -32,11 +32,16 @@ console.log(today)
 // const token = jwt.createToken({id : 1})
 // console.log(token)
 
-const obj = {
-    hello : 'alee',
-    age : '25'
-}
+// const obj = {
+//     hello : 'alee',
+//     age : '25'
+// }
 
-console.log(obj)
-console.log(delete obj.age)
-console.log(obj)
+// console.log(obj)
+// console.log(delete obj.age)
+// console.log(obj)
+
+// test schema 
+const { registerInputValidation } = require('../helpers/validation')
+
+console.log(registerInputValidation({username : 'aleaeee', password : 'aeee0!rr', email : 'alee@gmail.com'}))
