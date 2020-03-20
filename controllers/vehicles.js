@@ -352,10 +352,10 @@ module.exports = {
                         JOIN ${type} t ON t.id = v.type_id
                         JOIN ${brand} b ON b.id = v.brand_id
                         WHERE v.user_id = ?`
-            const vehilce = await connection.databaseQuery(getVehicle, id)
+            const vehicle = await connection.databaseQuery(getVehicle, id)
             
             // send feedback to client-side
-            res.status(200).send(vehilce)
+            res.status(200).send(vehicle)
         })
     },
     editVehicleData : (req, res) => {
