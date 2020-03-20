@@ -15,7 +15,8 @@ module.exports = {
         connection.databaseQueryWithErrorHandle(res, async () => {
             // const query = `SELECT id, name, image, DATE_FORMAT(birthdate, '%W %D %M %Y') AS birthdate, phone, address 
             // FROM profiles WHERE id = ?`
-            const query = 'SELECT * FROM profiles WHERE id = ?'
+            const query = `SELECT id, name, image, DATE_FORMAT(birthdate,' %Y-%m-%d') as birthdate, phone, address 
+                        FROM profiles WHERE id = ?`
             const result = await connection.databaseQuery(query, parseInt(req.params.id))
 
             // send feedback to client-side
