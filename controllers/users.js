@@ -17,8 +17,8 @@ module.exports = {
             // validate user input
             const { error } = registerInputValidation({
                 username : req.body.username,
-                password : req.body.password,
-                email : req.body.email
+                email : req.body.email,
+                password : req.body.password
             })
             if (error) throw({code : 401, msg : error.details[0].message})
 
