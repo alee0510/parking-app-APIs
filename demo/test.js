@@ -42,7 +42,14 @@
 // console.log(obj)
 
 // test schema 
-const { registerInputValidation } = require('../helpers/validation')
-const { error } = registerInputValidation({username : 'aleaeee', password : 'eyy!0rr', email : 'alee@gmail.com'})
+// const { registerInputValidation } = require('../helpers/validation')
+// const { error } = registerInputValidation({username : 'aleaeee', password : 'eyy!0rr', email : 'alee@gmail.com'})
 
-console.log( error ? error.details[0].message : 'ok' )
+// console.log( error ? error.details[0].message : 'ok' )
+
+// test duration
+// let duration = 635
+// let hours = Math.floor(duration/60)
+// let minutes = duration - (hours*60)
+
+// console.log(`${hours} : ${minutes}`)
