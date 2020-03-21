@@ -140,7 +140,7 @@ module.exports = {
     checkOTP : (req, res) => {
         // get request_id, pin code, and password confirmation
         const phone = req.body.phone
-        const request_id = req.body.reqId
+        const request_id = req.body.request_id
         const pin = req.body.pin
         const id = parseInt(req.params.id)
 
@@ -151,7 +151,7 @@ module.exports = {
             const status = result.status
 
             // if status != 0 it means pin code is invalid
-            if (status !== 0) throw ({ code : 400, msg : 'invalid pin code.'})
+            if (parseInt(status) !== 0) throw ({ code : 400, msg : 'invalid pin code.'})
 
             // change user status at database, add verified phone number and status
             const setStatus = 'UPDATE users SET status = 1 WHERE id = ?'
