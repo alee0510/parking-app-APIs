@@ -347,7 +347,7 @@ module.exports = {
             const type = vehicleType === 1 ? `car_types` : `motor_types`
 
             // define query
-            const getVehicle = `SELECT v.id, v.police_no, b.brand, t.name as type, v.color, v.user_id, v.vehicle_type
+            const getVehicle = `SELECT v.id, v.police_no, b.brand, v.brand_id, t.name as type, v.type_id, v.color, v.user_id, v.vehicle_type
                         FROM vehicles v
                         JOIN ${type} t ON t.id = v.type_id
                         JOIN ${brand} b ON b.id = v.brand_id
