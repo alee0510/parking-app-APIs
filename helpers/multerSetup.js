@@ -16,7 +16,7 @@ const _this = module.exports = {
         })
         return multer({
             storage : storage,
-            limits : { fileSize : 2000000}, // limit size 1Mb
+            limits : { fileSize : 5000000}, // limit size 1Mb
             fileFilter : (req, file, callback) => {
                 _this.checkFileTypes(file, callback)
             }
