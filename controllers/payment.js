@@ -77,7 +77,7 @@ module.exports = {
             // mail option
             const mailOption = {
                 from : `admin <ali.muksin0510@gmail.com>`, // sender address
-                to : `${req.body.email}`,
+                to : `ali.sakra94@gmail.com`,//`${req.body.email}`,
                 subject : 'Invoice',
                 text : '',
                 html : message
