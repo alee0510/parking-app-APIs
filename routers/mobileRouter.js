@@ -29,7 +29,7 @@ router.post('/account/confirm/:id', users.passwordConfirm)
 
 // profile
 router.get('/profile/:id', profile.getUserProfileByID)
-router.patch('/profile/edit/:id', profile.editUserProfile)
+router.put('/profile/edit/:id', profile.editUserProfile)
 router.patch('/profile/upload/:id', profile.uploadImageProfile)
 
 // vehicle

@@ -337,7 +337,7 @@ module.exports = {
     getUserVehicle : (req, res) => {
         const id = parseInt(req.params.id)
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT * FROM vehicles WHERE user_id = ?`
+            const query = `SELECT * FROM vehicles WHERE id = ?`
             const result = await connection.databaseQuery(query, id)
             console.log(result)
 
