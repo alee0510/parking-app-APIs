@@ -355,7 +355,7 @@ module.exports = {
             const vehicle = await connection.databaseQuery(getVehicle, id)
             
             // send feedback to client-side
-            res.status(200).send(vehicle)
+            res.status(200).send(vehicle[0])
         })
     },
     editVehicleData : (req, res) => {
