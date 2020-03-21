@@ -1,8 +1,10 @@
 // import module
 const router = require('express').Router()
+const PATH = './public/profiles'
 
-// import verifier
-// const { verify } = require ('../helpers/jwt')
+// import multer setup
+const { upload } = require('../helpers/multerSetup')
+const uploader = upload(PATH)
 
 // import our controllers
 const { 
@@ -30,7 +32,7 @@ router.post('/account/confirm/:id', users.passwordConfirm)
 // profile
 router.get('/profile/:id', profile.getUserProfileByID)
 router.put('/profile/edit/:id', profile.editUserProfile)
-router.put('/profile/upload/:id', profile.uploadImageProfile)
+router.put('/profile/upload/:id', uploader.single('IMG'), profile.uploadImageProfile)
 
 // vehicle
 router.get('/vehicle/:id', vehicles.getUserVehicle)
