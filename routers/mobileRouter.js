@@ -34,7 +34,7 @@ router.patch('/profile/upload/:id', profile.uploadImageProfile)
 
 // vehicle
 router.get('/vehicle/:id', vehicles.getUserVehicle)
-router.patch('/vehicle/:id', vehicles.editVehicleData)
+router.patch('/vehicle/edit/:id', vehicles.editVehicleData)
 router.get('/vehicle/car/brand', vehicles.getAllCarBrand)
 router.get('/vehicle/car/type/:id', vehicles.getCarTypeByBrand)
 router.get('/vehicle/motor/brand', vehicles.getAllMotorBrand)
