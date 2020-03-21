@@ -160,8 +160,15 @@ module.exports = {
             const setPhone = 'UPDATE profiles set phone = ? WHERE id = ?'
             await connection.databaseQuery(setPhone, [phone, id])
 
+            // get user data to create token
+            const getUser = `SELECT * FROM users WHERE id = ?`
+            const user = await connection.databaseQuery(getUser, id)
+
+            // create token
+            const token = jwt.createToken({ id : user[0].id, role : user[0].role, status : user[0].status})
+
             // send feedback to client-side
-            res.status(200).send('activation success.')
+            res.header('Auth-Token', token).send(user[0])
         })
     }
 }
