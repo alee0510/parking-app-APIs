@@ -81,13 +81,19 @@ const _this = module.exports = {
     // add user log history when enter parking area
     // need input user_id and area_id only
     addOnActive : (req, res) => {
+        req.body.area_id = parseInt(req.params.id)
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'INSERT INTO on_active SET ?'
-            const result = await connection.databaseQuery(query)
+            const result = await connection.databaseQuery(query, req.body)
+
+            // get cost
+            const costType = parseInt(req.body.vehicle_type) === 1 ? 'car_cost' : 'motor_cost'
+            const getCost = `SELECT id, ${costType} as cost FROM parking_area WHERE id = ?`
+            const data = await connection.databaseQuery(getCost, parseInt(req.params.id))
 
             // send feedback to client-side
-            const insertId = result.insertId
-            res.status(200).send([insertId])
+            data[0].parking_id = result.insertId
+            res.status(200).send(data)
         })
     },
     // change status when user leave parking area
