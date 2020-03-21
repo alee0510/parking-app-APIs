@@ -361,7 +361,7 @@ module.exports = {
     editVehicleData : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `UPDATE vehicles SET ? WHERE user_id = ?`
-            await connection.databaseQuery(query, parseInt(req.params.id))
+            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
         
             // send feedback to client-side
             res.status(200).send('vehicles data has been updated.')

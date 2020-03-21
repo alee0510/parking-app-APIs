@@ -24,8 +24,8 @@ class Connection {
             res.status(err.code).send(err.msg)
         }
     }
-    // create promisfy using begin transaction
-    databaseQueryTransaction = async (res, callback) => {
+    // create promisfy using begin transaction => only for single connection
+    databaseQueryTransactionSigleConnection = async (res, callback) => {
         try {
             await this.database.beginTransaction( async (err) => {
                 if (err) throw err
@@ -42,8 +42,30 @@ class Connection {
             await this.database.rollback() 
         }
     }
-    // create query that include file with error handle
 
+    // modified sql using pool connection
+    databaseQueryTransaction = (res, callback) => {
+        this.database.getConnection( async (err, Connection) => {
+            try {
+                if (err) throw err
+                // error handling for callback function
+                try {
+                    await callback()
+                } catch (err) {
+                    await Connection.rollback( _ => Connection.release())
+                    res.status(err.code).send(err.msg)
+                }
+
+                await Connection.commit( _ => Connection.release())
+            } catch (err) {
+                // if transaction error => roleback and release connection
+                await Connection.rollback( _ => Connection.release())
+            }
+        })
+
+    }
+
+    // create query that include file with error handle
 }
 
 module.exports = (database) => new Connection (database)
