@@ -2,6 +2,7 @@
 const bycript = require('bcryptjs')
 const jwt = require('../helpers/jwt')
 const { verify, check } = require('../helpers/nexmo')
+const { registerInputValidation } = require('../helpers/validation')
 
 // setup connection
 const database = require('../database')
@@ -13,6 +14,14 @@ module.exports = {
     register : (req, res) => {
         const { fullname, username, email, password } = req.body // user basic infromation
         connection.databaseQueryTransaction(res, async () => {
+            // validate user input
+            const { error } = registerInputValidation({
+                username : req.body.username,
+                password : req.body.password,
+                email : req.body.email
+            })
+            if (error) throw({code : 401, msg : error.details[0].message})
+
             // check if username and email is avaiable, username or email can't be duplicate
             const check = 'SELECT * FROM users WHERE username = ? OR email = ?'
             const result = await connection.databaseQuery(check, [username, email])

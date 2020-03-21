@@ -43,5 +43,6 @@
 
 // test schema 
 const { registerInputValidation } = require('../helpers/validation')
+const { error } = registerInputValidation({username : 'aleaeee', password : 'eyy!0rr', email : 'alee@gmail.com'})
 
-console.log(registerInputValidation({username : 'aleaeee', password : 'aeee0!rr', email : 'alee@gmail.com'}))
+console.log( error ? error.details[0].message : 'ok' )
