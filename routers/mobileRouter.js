@@ -23,18 +23,18 @@ router.post('/OTP/verify/:id', users.checkOTP)
 
 // account : edit username or password
 router.get('/account/:id', account.getAccountById)
-router.patch('/account/edit/username/:id', account.changeUsername)
-router.patch('/account/edit/password/:id', account.changePassword)
+router.put('/account/edit/username/:id', account.changeUsername)
+router.put('/account/edit/password/:id', account.changePassword)
 router.post('/account/confirm/:id', users.passwordConfirm)
 
 // profile
 router.get('/profile/:id', profile.getUserProfileByID)
 router.put('/profile/edit/:id', profile.editUserProfile)
-router.patch('/profile/upload/:id', profile.uploadImageProfile)
+router.put('/profile/upload/:id', profile.uploadImageProfile)
 
 // vehicle
 router.get('/vehicle/:id', vehicles.getUserVehicle)
-router.patch('/vehicle/edit/:id', vehicles.editVehicleData)
+router.put('/vehicle/edit/:id', vehicles.editVehicleData)
 router.get('/vehicle/car/brand', vehicles.getAllCarBrand)
 router.get('/vehicle/car/type/:id', vehicles.getCarTypeByBrand)
 router.get('/vehicle/motor/brand', vehicles.getAllMotorBrand)
@@ -49,7 +49,7 @@ router.get('/history/:id', history.getHistoryByUser)
 
 // wallet
 router.get('/wallet/saldo/:id', payment.getSaldo)
-router.patch('/wallet/topup/:id', payment.topUpSaldo)
+router.post('/wallet/topup/:id', payment.topUpSaldo)
 router.get('/wallet/history/:id', payment.checkTransactionHistory)
 
 // parking : enter and leave including payment transactions
