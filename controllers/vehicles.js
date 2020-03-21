@@ -366,5 +366,25 @@ module.exports = {
             // send feedback to client-side
             res.status(200).send('vehicles data has been updated.')
         })
+    },
+    getCarTypeByBrand : (req, res) => {
+        const brand_id = parseInt(req.params.id)
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `SELECT * FROM car_types WHERE brand_id = ?`
+            const result = await connection.databaseQuery(query, brand_id)
+
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
+    },
+    getMotorTypeByBrand : (req, res) => {
+        const brand_id = parseInt(req.params.id)
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `SELECT * FROM motor_types WHERE brand_id = ?`
+            const result = await connection.databaseQuery(query, brand_id)
+
+            // send feedback to client-side
+            res.status(200).send(result)
+        })
     }
 }

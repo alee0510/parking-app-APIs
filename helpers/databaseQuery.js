@@ -48,15 +48,17 @@ class Connection {
         this.database.getConnection( async (err, Connection) => {
             try {
                 if (err) throw err
-                // error handling for callback function
-                try {
-                    await callback()
-                } catch (err) {
-                    await Connection.rollback( _ => Connection.release())
-                    res.status(err.code).send(err.msg)
-                }
-
-                await Connection.commit( _ => Connection.release())
+                // begin transaction using single connection from pool
+                await Connection.beginTransaction( async err => {
+                    try {
+                        if (err) throw ({code : 500, msg : 'internal server error.'})
+                        await callback() // do some query
+                        await Connection.commit( _ => Connection.release()) // if all ok => commit it
+                    } catch (err) {
+                        await Connection.rollback( _ => Connection.release())
+                        res.status(err.code).send(err.msg)
+                    }
+                })
             } catch (err) {
                 // if transaction error => roleback and release connection
                 await Connection.rollback( _ => Connection.release())
