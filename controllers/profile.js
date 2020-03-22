@@ -44,7 +44,7 @@ module.exports = {
             const result = await connection.databaseQuery(getPath, id)
 
             // get image file path from request
-            const image = req.file.path
+            const image = req.file.path.slice(7, req.file.path.length)
             console.log(image)
 
             // do query to update image profile

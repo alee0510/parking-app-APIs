@@ -110,5 +110,8 @@ const data = area.map(item => {
 // const past = Date.now()
 // setTimeout( _ => console.log(Math.ceil((Date.now() - past)/60000)), 10000)
 
-let arr = '/parking/enter/6'
-console.log(arr.split('/')[3])
+// let arr = '/parking/enter/6'
+// console.log(arr.split('/')[3])
+
+let path = 'public/profiles/IMG-1584901066151.jpg'
+console.log(path.slice(7, path.length))
