@@ -1,6 +1,7 @@
 // setup connection
 const database = require('../database')
 const connection = require('../helpers/databaseQuery')(database)
+const pool = require('../helpers/databaseQueryPool')()
 
 // export controllers
 const _this = module.exports = {
@@ -100,22 +101,23 @@ const _this = module.exports = {
     // IMPORTANT ! => need input duration
     changeOnActiveStatus : (req, res) => {
         const id = parseInt(req.params.id)
-        connection.databaseQueryTransaction(res, async () => {
+        pool.databaseQueryTransaction(database, res, async (connection) => {
             // change status on on_active table
-            const changeStatus = 'UPDATE on_active SET status = 1 WHERE id = ?'
-            await connection.databaseQuery(changeStatus, id)
+            const changeStatus = `UPDATE on_active SET status = ${1} WHERE id = ?`
+            await pool.databaseQuery(connection, changeStatus, id)
 
             // get log on_active history
             const getLog = 'SELECT * FROM on_active WHERE id = ?'
-            const log = await connection.databaseQuery(getLog, id)
+            const log = await pool.databaseQuery(connection, getLog, id)
 
             // fill history table using data from log and leave data from log
             // log.leave_date = req.body.leave_date
-            log.duration = req.body.duration
-            delete log.status
+            log[0].duration = req.body.duration
+            delete log[0].status
+            delete log[0].id
 
             const addHistory = 'INSERT INTO history SET ?'
-            await connection.databaseQuery(addHistory, log)
+            await pool.databaseQuery(connection, addHistory, log)
 
             // send feedback to client-side
             res.status(200).send('status change and history added.')

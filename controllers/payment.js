@@ -1,6 +1,7 @@
 // setup connection
 const database = require('../database')
 const connection = require('../helpers/databaseQuery')(database)
+const pool = require('../helpers/databaseQueryPool')()
 const transporter = require('../helpers/nodemailer')
 
 // export controllers
@@ -46,26 +47,27 @@ module.exports = {
     payParking : (req, res) => {
         const userId = parseInt(req.params.id)
         const totalPayment = parseInt(req.body.total)
-        connection.databaseQueryTransaction(res, async () => {
+        pool.databaseQueryTransaction(database, res, async (connection) => {
             // get current saldo
             const getCurrentSaldo = 'SELECT * FROM wallet where id = ?'
-            const currentSaldo = await connection.databaseQuery(getCurrentSaldo, userId)
+            const currentSaldo = await pool.databaseQuery(connection, getCurrentSaldo, userId)
+            if(currentSaldo[0].saldo < totalPayment) throw({code : 400, msg : 'saldo doesn\'t enough.'})
 
             // reduce user saldo according to payment total
-            const saldo = currentSaldo - totalPayment
-            const reduceSaldo = `UPDATE FROM wallet SET saldo = ${saldo} WHERE id = ?`
-            await connection.databaseQuery(reduceSaldo, userId)
+            const saldo = currentSaldo[0].saldo - totalPayment
+            const reduceSaldo = `UPDATE wallet SET saldo = ${saldo} WHERE id = ?`
+            await pool.databaseQuery(connection, reduceSaldo, userId)
 
             // add log to transaction history
             const data = {
                 // date : req.body.date,
                 type : 2,
-                ammount : totalPayment,
+                amount : totalPayment,
                 user_id : userId,
                 status : 1
             }
             const addLogHistory = `INSERT INTO transaction_history SET ?`
-            await connection.databaseQuery(addLogHistory, data)
+            await pool.databaseQuery(connection, addLogHistory, data)
 
             // OPTIONAL : send invoice receipt
             const message = `<h1>Invoice</h1>
@@ -94,13 +96,13 @@ module.exports = {
         // get user id from req.params
         const transactionId = parseInt(req.params.id)
 
-        connection.databaseQueryTransaction(res, async () => {
+        pool.databaseQueryTransaction(database, res, async (connection) => {
             // do authorization
             // if (parseInt(req.user.role) !== 1) throw({code : 401, msg : 'access denied.'})
 
             // get top-up amount
             const chekTopUpAmount = 'SELECT * FROM transaction_history WHERE id = ?'
-            const topUpAmount = await connection.databaseQuery(chekTopUpAmount, transactionId)
+            const topUpAmount = await pool.databaseQuery(connection, chekTopUpAmount, transactionId)
             // console.log(topUpAmount)
 
             
@@ -108,23 +110,23 @@ module.exports = {
             const userId = parseInt(topUpAmount[0].user_id)
             // console.log(userId)
             const checkUserSaldo = 'SELECT * FROM wallet WHERE id = ?'
-            const currentSaldo = await connection.databaseQuery(checkUserSaldo, userId)
+            const currentSaldo = await pool.databaseQuery(connection, checkUserSaldo, userId)
             // console.log(currentSaldo)
             
             
             // top-up saldo to user wallet
             const saldo = topUpAmount[0].amount + currentSaldo[0].saldo
             const topUpSaldo = `UPDATE wallet SET ? WHERE id = ?`
-            await connection.databaseQuery(topUpSaldo, [{ saldo }, userId])
+            await pool.databaseQuery(connection, topUpSaldo, [{ saldo }, userId])
 
             // change user status transaction
             const approveStatus = 'UPDATE transaction_history SET status = 1 WHERE id = ?'
-            await connection.databaseQuery(approveStatus, transactionId)
+            await pool.databaseQuery(connection, approveStatus, transactionId)
 
             // OPTIONAL : send invoice receipt
             // get user email
             const getUser = 'SELECT * FROM users WHERE id = ?'
-            const user = await connection.databaseQuery(getUser, userId)
+            const user = await pool.databaseQuery(connection, getUser, userId)
 
             // mail message
             const message = `<h1>Invoice</h1>

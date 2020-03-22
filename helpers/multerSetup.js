@@ -11,6 +11,7 @@ const _this = module.exports = {
         const storage = multer.diskStorage({
             destination : folder,
             filename : (req, file, callback) => {
+                console.log('file : ', file)
                 callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
             }
         })

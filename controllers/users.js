@@ -3,6 +3,7 @@ const bycript = require('bcryptjs')
 const jwt = require('../helpers/jwt')
 const { verify, check } = require('../helpers/nexmo')
 const { registerInputValidation } = require('../helpers/validation')
+const pool = require('../helpers/databaseQueryPool')()
 
 // setup connection
 const database = require('../database')
@@ -13,7 +14,7 @@ module.exports = {
     // register
     register : (req, res) => {
         const { fullname, username, email, password } = req.body // user basic infromation
-        connection.databaseQueryTransaction(res, async () => {
+        pool.databaseQueryTransaction(database, res, async (connection) => {
             // validate user input
             const { error } = registerInputValidation({
                 username : req.body.username,
@@ -24,7 +25,7 @@ module.exports = {
 
             // check if username and email is avaiable, username or email can't be duplicate
             const check = 'SELECT * FROM users WHERE username = ? OR email = ?'
-            const result = await connection.databaseQuery(check, [username, email])
+            const result = await pool.databaseQuery(connection, check, [username, email])
             if (result.length !== 0) throw ({code : 400, msg : 'username or email is already exist.'})
 
             // crypt user password
@@ -35,17 +36,17 @@ module.exports = {
             // input user data into database
             const user = { username, email, password : cryptPassword }
             const addUser = 'INSERT INTO users SET ?'
-            const newUser = await connection.databaseQuery(addUser, user)
+            const newUser = await pool.databaseQuery(connection, addUser, user)
 
             // add user profile
             const profile = { id : newUser.insertId, name : fullname }
             const addProfile = 'INSERT INTO profiles SET ?'
-            await connection.databaseQuery(addProfile, profile)
+            await pool.databaseQuery(connection, addProfile, profile)
 
             // add user wallet
             const wallet = { id : newUser.insertId, saldo : 0, point : 0}
             const addWallet = 'INSERT INTO wallet SET ?'
-            await connection.databaseQuery(addWallet, wallet)
+            await pool.databaseQuery(connection, addWallet, wallet)
 
             // send token to client-side
             const token = jwt.createToken({id : newUser.insertId})
@@ -153,7 +154,7 @@ module.exports = {
         const pin = req.body.pin
         const id = parseInt(req.params.id)
 
-        connection.databaseQueryTransaction(res, async () => {
+        pool.databaseQueryTransaction(database, res, async (connection) => {
             // check OTP
             const result = await check(request_id, pin)
             console.log(result)
@@ -164,14 +165,14 @@ module.exports = {
 
             // change user status at database, add verified phone number and status
             const setStatus = 'UPDATE users SET status = 1 WHERE id = ?'
-            await connection.databaseQuery(setStatus, id)
+            await pool.databaseQuery(connection, setStatus, id)
 
             const setPhone = 'UPDATE profiles set phone = ? WHERE id = ?'
-            await connection.databaseQuery(setPhone, [phone, id])
+            await pool.databaseQuery(connection, setPhone, [phone, id])
 
             // get user data to create token
             const getUser = `SELECT * FROM users WHERE id = ?`
-            const user = await connection.databaseQuery(getUser, id)
+            const user = await pool.databaseQuery(connection, getUser, id)
 
             // create token
             const token = jwt.createToken({ id : user[0].id, role : user[0].role, status : user[0].status})

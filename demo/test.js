@@ -53,3 +53,55 @@
 // let minutes = duration - (hours*60)
 
 // console.log(`${hours} : ${minutes}`)
+
+// change object parameter value
+const area = [
+    {
+        "id": 1,
+        "company": "aeon ceria",
+        "image": null,
+        "address": "Jl. BSD Raya Utama, Pagedangan, Kec. Pagedangan",
+        "city": "Tanggerang Selatan",
+        "province": "Banten",
+        "car_cost": 350,
+        "motor_cost": 250,
+        "car_slot": 150,
+        "motor_slot": 210,
+        "place_name": "AEON Mall BSD",
+        "coordinates": "{\"latitude\": -6.302018, \"longitude\": 106.646241}"
+    },
+    {
+        "id": 2,
+        "company": "itc elektronik",
+        "image": null,
+        "address": "Jalan Pahlawan Seribu, Lengkong Wetan, Serpong",
+        "city": "Tangerang Selatan",
+        "province": "Banten",
+        "car_cost": 300,
+        "motor_cost": 280,
+        "car_slot": 135,
+        "motor_slot": 200,
+        "place_name": "ITC BSD",
+        "coordinates": "{\"latitude\": -6.288359, \"longitude\": 106.662625}"
+    },
+    {
+        "id": 3,
+        "company": "teras kota corp",
+        "image": null,
+        "address": "Jalan Pahlawan Seribu CBD Lot VII B, Lengkong Gudang, Serpong",
+        "city": "Tangerang Selatan",
+        "province": "Banten",
+        "car_cost": 365,
+        "motor_cost": 300,
+        "car_slot": 115,
+        "motor_slot": 195,
+        "place_name": "Teras Kota Mall",
+        "coordinates": "{\"latitude\": -6.298531, \"longitude\": 106.668144}"
+    },
+]
+
+const data = area.map(item => {
+    return { ...item, coordinates : JSON.parse(item.coordinates)}
+})
+// console.log(area)
+console.log(data.map(({coordinates}) => coordinates.latitude))
