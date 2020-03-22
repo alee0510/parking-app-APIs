@@ -87,11 +87,11 @@ const _this = module.exports = {
             const result = await connection.databaseQuery(query, {
                 user_id : req.body.user_id,
                 area_id : parseInt(req.params.id)
-            })
+            }) 
 
             // get cost
             const costType = parseInt(req.body.vehicle_type) === 1 ? 'car_cost' : 'motor_cost'
-            const getCost = `SELECT id, ${costType} as cost FROM parking_area WHERE id = ?`
+            const getCost = `SELECT id, ${costType} as cost, place_name FROM parking_area WHERE id = ?`
             const data = await connection.databaseQuery(getCost, parseInt(req.params.id))
 
             // send feedback to client-side
