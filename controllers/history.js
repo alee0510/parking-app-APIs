@@ -82,10 +82,12 @@ const _this = module.exports = {
     // add user log history when enter parking area
     // need input user_id and area_id only
     addOnActive : (req, res) => {
-        req.body.area_id = parseInt(req.params.id)
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = 'INSERT INTO on_active SET ?'
-            const result = await connection.databaseQuery(query, req.body)
+            const result = await connection.databaseQuery(query, {
+                user_id : req.body.user_id,
+                area_id : parseInt(req.params.id)
+            })
 
             // get cost
             const costType = parseInt(req.body.vehicle_type) === 1 ? 'car_cost' : 'motor_cost'
