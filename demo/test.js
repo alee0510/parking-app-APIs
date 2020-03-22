@@ -104,4 +104,6 @@ const data = area.map(item => {
     return { ...item, coordinates : JSON.parse(item.coordinates)}
 })
 // console.log(area)
-console.log(data.map(({coordinates}) => coordinates.latitude))
+// console.log(data.map(({coordinates}) => coordinates.latitude))
+
+// console.log(Date.now())
