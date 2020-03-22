@@ -107,3 +107,5 @@ const data = area.map(item => {
 // console.log(data.map(({coordinates}) => coordinates.latitude))
 
 // console.log(Date.now())
+const past = Date.now()
+setTimeout( _ => console.log(Math.ceil((Date.now() - past)/60000)), 10000)
