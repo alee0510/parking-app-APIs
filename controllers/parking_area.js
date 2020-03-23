@@ -20,7 +20,7 @@ module.exports = {
         connection.databaseQueryWithErrorHandle(res, async () => {
             const getData = `SELECT pk.id, p.company, pk.image, pk.address, pk.city, 
                         pk.province, pk.car_cost, pk.motor_cost, pk.car_slot, 
-                        pk.motor_slot, pk.place_name, pk.coordinates
+                        pk.motor_slot, pk.place_name, pk.coordinates, pk.direction
                         FROM parking_area pk
                         JOIN partners p ON p.id = pk.company_id ${execption}`
             const data = await connection.databaseQuery(getData)
