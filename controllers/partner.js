@@ -8,11 +8,12 @@ module.exports = {
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT p.id, p.company, p.phone, p.email, us.username AS admin 
                         FROM partners p
-                        JOIN users us ON p.user_id = us.id`
-            const result = await connection.databaseQuery(query)
+                        JOIN users us ON p.user_id = us.id
+                        WHERE p.user_id = ?`
+            const result = await connection.databaseQuery(query, parseInt(req.params.id))
 
             // send feedback to client-side
-            res.status(200).send(result)
+            res.status(200).send(result[0])
         })
     },
     deletePartner : (req, res) => {
@@ -40,6 +41,17 @@ module.exports = {
 
             // send feedback to client-side
             res.status(200).send('partner has been updated.')
+        })
+    },
+    getAllPartner : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = `SELECT p.id, p.company, p.phone, p.email, us.username AS admin 
+                        FROM partners p
+                        JOIN users us ON p.user_id = us.id`
+            const result = await connection.databaseQuery(query)
+
+            // send feedback to client-side
+            res.status(200).send(result)
         })
     }
 }
