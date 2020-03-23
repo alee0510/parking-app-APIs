@@ -87,7 +87,7 @@ module.exports = {
 
             // get image file path from request
             const image = req.file.path.split('\\').splice(1).join('/')
-            console.log(image)
+            console.log('image controller', image)
 
             // do query to update image
             const update = 'UPDATE parking_area SET image = ? WHERE id = ?'
