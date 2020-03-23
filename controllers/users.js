@@ -86,6 +86,7 @@ module.exports = {
             if ([1, 2].includes(parseInt(result[0].role))) {
                 const getCompanyId = 'SELECT * FROM partners WHERE user_id = ?'
                 const companyId = await connection.databaseQuery(getCompanyId, result[0].id)
+                console.log(companyId)
                 data.company_id = companyId[0].id
                 result[0].company_id = companyId[0].id
             }
