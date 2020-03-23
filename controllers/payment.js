@@ -77,9 +77,13 @@ module.exports = {
                         <h3>Thank you.</h3>
                         `
             // mail option
+            // get user email
+            const getUser = 'SELECT * FROM users WHERE id = ?'
+            const user = await pool.databaseQuery(connection, getUser, userId)
+            
             const mailOption = {
                 from : `admin <ali.muksin0510@gmail.com>`, // sender address
-                to : `ali.sakra94@gmail.com`,//`${req.body.email}`,
+                to : `${user[0].email}`,//`${req.body.email}`,
                 subject : 'Invoice',
                 text : '',
                 html : message
@@ -138,7 +142,7 @@ module.exports = {
             // mail option
             const mailOption = {
                 from : `admin <ali.muksin0510@gmail.com>`, // sender address
-                to : 'ali.sakra94@gmail.com',//`${user[0].email}`,
+                to : `${user[0].email}`,//`${user[0].email}`,
                 subject : 'Invoice',
                 text : '',
                 html : message

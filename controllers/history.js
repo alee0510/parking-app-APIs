@@ -72,7 +72,7 @@ const _this = module.exports = {
             const cost = await connection.databaseQuery(getCost)
             console.log(cost)
 
-            history.map(item => item.total_cost = vehicle === 1 ? (item.duration/10)*_this.findCost(cost, item.area_id).car_cost
+            history.map(item => item.total_cost = parseInt(vehicle[0].vehicle_type) === 1 ? (item.duration/10)*_this.findCost(cost, item.area_id).car_cost
             : (item.duration/10)*_this.findCost(cost, item.area_id).motor_cost)
 
             console.log(history)
