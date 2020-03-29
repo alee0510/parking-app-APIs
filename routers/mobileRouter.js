@@ -37,9 +37,9 @@ router.put('/profile/upload/:id', uploader.single('IMG'), profile.uploadImagePro
 // vehicle
 router.get('/vehicle/:id', vehicles.getUserVehicle)
 router.put('/vehicle/edit/:id', vehicles.editVehicleData)
-router.get('/vehicle/car/brand', vehicles.getAllCarBrand)
+router.get('/vehicle/car/brand', vehicles.getCarBrands)
 router.get('/vehicle/car/type/:id', vehicles.getCarTypeByBrand)
-router.get('/vehicle/motor/brand', vehicles.getAllMotorBrand)
+router.get('/vehicle/motor/brand', vehicles.getMotorBrands)
 router.get('/vehicle/motor/type/:id', vehicles.getMotorTypeByBrand)
 
 // rating

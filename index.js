@@ -52,11 +52,11 @@ const { adminRouter,
 
 // api web
 app.use('/api/admin', adminRouter)
-app.use('/api/admin', vehicleRouter)
 app.use('/api/user', userRouter)
 app.use('/api/user', profileRouter)
 app.use('/api/rating', ratingRouter)
 app.use('/api/history', historyRouter)
+app.use('/api/vehicle', vehicleRouter)
 app.use('/api/payment', paymentRouter)
 app.use('/api/parking', parkingAreaRouter)
 app.use('/api/partner', partnerRouter)

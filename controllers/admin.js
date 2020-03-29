@@ -4,196 +4,105 @@ const connection = require('../helpers/databaseQuery')(database)
 
 // export controllers
 module.exports = {
-    /* pagination implementation --> reverse : get the last registered user
-    get all users account */
-    getInitialUserData : (req, res) => {
-        console.log(req.query)
+    /* 
+    pagination implementation --> reverse : get the last registered user
+    get all users account 
+    endpoint : /admin/get/users/query => next, prev, limit
+    */
+    getUserAccount : (req, res) => {
+        // check query
+        const limit = parseInt(req.query.limit) || null
+        const role = parseInt(req.query.role) || null
+        const next  = parseInt(req.query.next) || null // last id
+        const prev = parseInt(req.query.prev) || null // first id
 
-        // define exception
-        const role = [undefined, 'null'].includes(req.query.role) ? null : parseInt(req.query.role)
-        if (![2, 3, null].includes(role)) return res.status(404).send('user role not found.')
-        const exception = `role ${!role ? ' != 1' : role === 2 ? ' = 2' : ' = 3'}`
+        // define query
+        const queryLimit = limit ? `LIMIT ${limit}` : ''
+        const queryRole = role && role !== 1 ? `role = ${role}` : `role != 1`
+        const queryNext =  next ? `AND id < ${next}` : ''
+        const queryPrev = prev ? `AND id > ${prev}` : ''
+        const order = prev ? 'ASC' : 'DESC'
 
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const getFirstData = `SELECT * FROM users 
-                                WHERE ${exception}
-                                ORDER BY id DESC LIMIT ?`
-            const result = await connection.databaseQuery(getFirstData, parseInt(req.query.limit))
+            const query = `SELECT * FROM users
+                        WHERE ${queryRole} ${queryNext}${queryPrev}
+                        ORDER BY id ${order} ${queryLimit}`
+
+            // console.log(query)
+            const result = await connection.databaseQuery(query)
 
             // send feedback to client-side
             res.status(200).send(result)
         })
     },
-    getNextUserData : (req, res) => {
-        console.log(req.query)
+    getUserProfile : (req, res) => {
+        // check query
+        const limit = parseInt(req.query.limit) || null
+        const role = parseInt(req.query.role) || null
+        const next  = parseInt(req.query.next) || null // last id
+        const prev = parseInt(req.query.prev) || null // first id
 
-        // get and define execption
-        const id = parseInt(req.query.id)
-        const limit = parseInt(req.query.limit)
-
-        const role = [undefined, 'null'].includes(req.query.role) ? null : parseInt(req.query.role)
-        if (![2, 3, null].includes(role)) return res.status(404).send('user role not found.')
-        const exception = `role ${!role ? ' != 1' : role === 2 ? ' = 2' : ' = 3'}`
-
-        // do query
-        connection.databaseQueryWithErrorHandle(res, async () => {
-            const getNextData = `SELECT * FROM users 
-                                WHERE ${exception} AND id < ?
-                                ORDER BY id DESC LIMIT ?`
-            const result = await connection.databaseQuery(getNextData, [id, limit])
-
-            // send feeback to client-side
-            res.status(200).send(result)
-        })
-    },
-    getPrevUserData : (req, res) => {
-        console.log(req.query)
-
-        // get and define execption
-        const id = parseInt(req.query.id)
-        const limit = parseInt(req.query.limit)
-
-        const role = [undefined, 'null'].includes(req.query.role) ? null : parseInt(req.query.role)
-        if (![2, 3, null].includes(role)) return res.status(404).send('user role not found.')
-        const exception = `role ${!role ? ' != 1' : role === 2 ? ' = 2' : ' = 3'}`
+        // define query
+        const queryLimit = limit ? `LIMIT ${limit}` : ''
+        const queryRole = role && role !== 1 ? `us.role = ${role}` : `us.role != 1`
+        const queryNext =  next ? `AND pf.id < ${next}` : ''
+        const queryPrev = prev ? `AND pf.id > ${prev}` : ''
+        const order = prev ? 'ASC' : 'DESC'
 
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const getPrevData = `SELECT * FROM users
-                                WHERE ${exception} AND id > ?
-                                ORDER BY id ASC LIMIT ?`
-            const result = await connection.databaseQuery(getPrevData, [id, limit])
-
+            const query = `SELECT pf.id, us.username, pf.name, pf.image, pf.birthdate, pf.phone, pf.address 
+                        FROM users us
+                        JOIN profiles pf ON us.id = pf.id
+                        WHERE ${queryRole} ${queryNext}${queryPrev}
+                        ORDER BY pf.id ${order} ${queryLimit}`
+            // console.log(query)
+            const result = await connection.databaseQuery(query)
+            
             // send feedback to client-side
-            res.status(200).send(result)
-        })
-    },
-    // get user profile
-    getInitialUserProfileData : async (req, res) => {
-        console.log(req.query)
-        
-        // define exception
-        const role = [undefined, 'null'].includes(req.query.role) ? null : parseInt(req.query.role)
-        if (![2, 3, null].includes(role)) return res.status(404).send('user role not found.')
-        const exception = `role ${!role ? ' != 1' : role === 2 ? ' = 2' : ' = 3'}`
-        
-        // do query
-        connection.databaseQueryWithErrorHandle(res, async () => {
-            const getProfileData = `SELECT pf.id, us.username, pf.name, 
-                                    pf.image, pf.birthdate, pf.phone, pf.address 
-                                    FROM users us
-                                    JOIN profiles pf ON us.id = pf.id
-                                    WHERE ${exception}
-                                    ORDER BY pf.id DESC LIMIT ?`
-            const result = await connection.databaseQuery(getProfileData, parseInt(req.query.limit))
-
-            // send feedback to client-side
-            res.status(200).send(result)
-        })
-    },
-    getNextUserProfileData : (req, res) => {
-        console.log(req.query)
-
-        // get and define execption
-        const id = parseInt(req.query.id)
-        const limit = parseInt(req.query.limit)
-
-        const role = [undefined, 'null'].includes(req.query.role) ? null : parseInt(req.query.role)
-        if (![2, 3, null].includes(role)) return res.status(404).send('user role not found.')
-        const exception = `role ${!role ? ' != 1' : role === 2 ? ' = 2' : ' = 3'}`
-
-        // do query
-        connection.databaseQueryWithErrorHandle(res, async () => {
-            const getNextProfileData = `SELECT pf.id, us.username, pf.name, 
-                                    pf.image, pf.birthdate, pf.phone, pf.address 
-                                    FROM users us
-                                    JOIN profiles pf ON us.id = pf.id
-                                    WHERE ${exception} AND pf.id < ?
-                                    ORDER BY pf.id DESC LIMIT ?`
-            const result = await connection.databaseQuery(getNextProfileData, [id, limit])
-
-            // send feeback to client-side
-            res.status(200).send(result)
-        })
-    },
-    getPrevUserProfileData : (req, res) => {
-        console.log(req.query)
-
-        // get and define execption
-        const id = parseInt(req.query.id)
-        const limit = parseInt(req.query.limit)
-
-        const role = [undefined, 'null'].includes(req.query.role) ? null : parseInt(req.query.role)
-        if (![2, 3, null].includes(role)) return res.status(404).send('user role not found.')
-        const exception = `role ${!role ? ' != 1' : role === 2 ? ' = 2' : ' = 3'}`
-
-        // do query
-        connection.databaseQueryWithErrorHandle(res, async () => {
-            const getPrevProfileData = `SELECT pf.id, us.username, pf.name, 
-                                    pf.image, pf.birthdate, pf.phone, pf.address 
-                                    FROM users us
-                                    JOIN profiles pf ON us.id = pf.id
-                                    WHERE ${exception} AND pf.id > ?
-                                    ORDER BY pf.id ASC LIMIT ?`
-            const result = await connection.databaseQuery(getPrevProfileData, [id, limit])
-
-            // send feeback to client-side
             res.status(200).send(result)
         })
     },
     // superadmin feature : manage user's role
     getUserRole : (req, res) => {
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const getRole = 'SELECT * FROM roles'
-            const result = await connection.databaseQuery(getRole)
+            const query = 'SELECT * FROM roles'
+            const result = await connection.databaseQuery(query)
 
             // send feedback to client-side
             res.status(200).send(result)
         })
     },
     editUserRole : (req, res) => {
-        const id = parseInt(req.params.id)
-        console.log('user id', id)
-
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const editRle = 'UPDATE users SET ? WHERE id = ?'
-            await connection.databaseQuery(editRle, [req.body, id])
+            const query = 'UPDATE users SET ? WHERE id = ?'
+            await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
 
             // send feedback to client-side
             res.status(200).send('role has been added.')
         })
     },
     // superadmin feature : manage user account
-    deletUser : (req, res) => {
-        // console.log(req.query)
-        // const multiple = parseInt(req.query.multiple || 0) // value 0 or 1
-        const id = parseInt(req.params.id)
-
+    deleteUserAccount : (req, res) => {
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
-            // define query
             const query = 'DELETE FROM users WHERE id = ?'
-            // if (multiple) query = `DELETE FROM users WEHERE id IN (${[...req.body.id]})`
-            
-            // do query
-            // console.log(query)
-            // await connection.databaseQuery(query, id || [])
-            await connection.databaseQuery(query, id)
+            await connection.databaseQuery(query, parseInt(req.params.id))
 
             // send feedback to client-side
             res.status(200).send('user has been deleted.')
         })
     },
     // get total user in database
-    getTotalUser : (req, res) => {
+    getTotalUserAccount : (req, res) => {
         // define exception
-        const role = req.query.role === 'null' ? null : parseInt(req.query.role)
-        const exception = role ? `WHERE role = ${role}` : ''
+        const role = parseInt(req.query.role) || null
+        const queryRole = role ? `WHERE role = ${role}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT COUNT(*) AS total FROM users USE INDEX(PRIMARY) ${exception} `
+            const query = `SELECT COUNT(*) AS total FROM users USE INDEX(PRIMARY) ${queryRole} `
             const result = await connection.databaseQuery(query)
 
             // send feedback to client-side

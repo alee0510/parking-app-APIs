@@ -117,7 +117,6 @@ module.exports = {
             const currentSaldo = await pool.databaseQuery(connection, checkUserSaldo, userId)
             // console.log(currentSaldo)
             
-            
             // top-up saldo to user wallet
             const saldo = topUpAmount[0].amount + currentSaldo[0].saldo
             const topUpSaldo = `UPDATE wallet SET ? WHERE id = ?`
@@ -155,82 +154,55 @@ module.exports = {
             res.status(200).send('top-up approval success.')
         })
     },
+    topUpRejectByAdmin : (req, res) => {
+        connection.databaseQueryWithErrorHandle(res, async () => {
+            const query = 'UPDATE transaction_history SET status = 3 WHERE id = ?'
+            await connection.databaseQuery(query, parseInt(req.params.id))
+
+            // send feedback to client-side
+            res.status(200).send('top-up has been rejected.')
+        })
+    },
     // get transaction history
-    getInitialTransactionHistory : (req, res) => {
-        const limit = parseInt(req.query.limit)
+    getTransactionHistory : (req, res) => {
+        // check query
+        const limit = parseInt(req.query.limit) || null
+        const type = parseInt(req.query.type) || null
+        const next  = parseInt(req.query.next) || null // last id
+        const prev = parseInt(req.query.prev) || null // first id
+    
+        // define query
+        const queryLimit = limit ? `LIMIT ${limit}` : ''
+        const queryType = type ? next || prev ? `AND type = ${type}` : `WHERE type = ${type}` : ''
+        const queryNext =  next ? `WHERE th.id < ${next} ` : ''
+        const queryPrev = prev ? `WHERE th.id > ${prev} ` : ''
+        const order = prev ? 'ASC' : 'DESC'
 
-        // define exception
-        const type = req.query.type === 'null' ? null : parseInt(req.query.type)
-        const exception = type ? `WHERE type = ${type}` : ''
-
+        // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT th.id, 
                     DATE_FORMAT(th.date, '%W, %D %M %Y, %H:%i') AS date,
-                    th.type, th.amount, th.user_id, us.username, th.status 
+                    th.type, th.am  ount, th.user_id, us.username, th.status 
                     FROM transaction_history th
                     JOIN users us ON us.id = th.user_id 
-                    ${exception}
-                    ORDER by th.id DESC LIMIT ?`
-            const result = await connection.databaseQuery(query, limit)
+                    ${queryNext}${queryPrev}${queryType}
+                    ORDER by th.id ${order} ${queryLimit}`
+            console.log(query)
+            const result = await connection.databaseQuery(query)
 
             // send feedback to client-side
             res.status(200).send(result)
         })
-    },
-    getNextTransactionHistory : (req, res) => {
-        const id = parseInt(req.query.id)
-        const limit = parseInt(req.query.limit)
-
-        // define exception
-        const type = req.query.type === 'null' ? null : parseInt(req.query.type)
-        const exception = type ? `AND type = ${type}` : ''
-
-        connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT th.id, 
-                    DATE_FORMAT(th.date, '%W, %D %M %Y, %H:%i') AS date,
-                    th.type, th.amount, th.user_id, us.username, th.status 
-                    FROM transaction_history th
-                    JOIN users us ON us.id = th.user_id 
-                    WHERE th.id < ? ${exception}
-                    ORDER by th.id DESC LIMIT ?`
-            const result = await connection.databaseQuery(query, [id, limit])
-
-            // send feedback to client-side
-            res.status(200).send(result)
-        })
-    },
-    getPrevTransactionHIstory : (req, res) => {
-        const id = parseInt(req.query.id)
-        const limit = parseInt(req.query.limit)
-    
-        // define exception
-        const type = req.query.type === 'null' ? null : parseInt(req.query.type)
-        const exception = type ? `AND type = ${type}` : ''
-    
-        connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT th.id, 
-                    DATE_FORMAT(th.date, '%W, %D %M %Y, %H:%i') AS date,
-                    th.type, th.amount, th.user_id, us.username, th.status 
-                    FROM transaction_history th
-                    JOIN users us ON us.id = th.user_id 
-                    WHERE th.id > ? ${exception}
-                    ORDER by th.id ASC LIMIT ?`
-            const result = await connection.databaseQuery(query, [id, limit])
-    
-            // send feedback to client-side
-            res.status(200).send(result)
-        })
-        
     },
     // get total data
     getTotalTransactionHistoryData : (req, res) => {
         // do authorization to define execption
-        const type = ['null', undefined].includes(req.query.type) ? null : parseInt(req.query.type)
-        const exception = type ? `WHERE type = ${type}` : ''
+        const type = parseInt(req.query.type) || null
+        const queryType = type ? `WHERE type = ${type}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT COUNT(*) AS total 
-                        FROM transaction_history USE INDEX(PRIMARY) ${exception}`
+                        FROM transaction_history USE INDEX(PRIMARY) ${queryType}`
             const result = await connection.databaseQuery(query)
 
             // send feedback to client-side

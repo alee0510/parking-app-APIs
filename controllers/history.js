@@ -11,13 +11,13 @@ const _this = module.exports = {
     // get total data
     getTotalHistory : (req, res) => {
         // do athorization to define exception
-        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
-        const exception = company ? `WHERE pk.company_id = ${company}` : ''
+        const company = parseInt(req.query.company) || null
+        const queryCompany = company ? `WHERE pk.company_id = ${company}` : ''
         
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT COUNT(*) as total
                         FROM history h USE INDEX(PRIMARY)
-                        JOIN parking_area pk ON h.area_id = pk.id ${exception}`
+                        JOIN parking_area pk ON h.area_id = pk.id ${queryCompany}`
             // console.log(query)
             const result = await connection.databaseQuery(query)
             console.log(result)
@@ -29,13 +29,13 @@ const _this = module.exports = {
     },
     getTotalOnActive : (req, res) => {
         // do athorization to define exception
-        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
-        const exception = company ? `WHERE pk.company_id = ${company}` : ''
+        const company = parseInt(req.query.company) || null
+        const queryCompany = company ? `WHERE pk.company_id = ${company}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT COUNT(*) as total
                         FROM on_active oa USE INDEX(PRIMARY)
-                        JOIN parking_area pk ON oa.area_id = pk.id ${exception}`
+                        JOIN parking_area pk ON oa.area_id = pk.id ${queryCompany}`
             const result = await connection.databaseQuery(query)
 
             // send feedback to client-side
@@ -105,7 +105,7 @@ const _this = module.exports = {
         const id = parseInt(req.params.id)
         pool.databaseQueryTransaction(database, res, async (connection) => {
             // change status on on_active table
-            const changeStatus = `UPDATE on_active SET status = ${1} WHERE id = ?`
+            const changeStatus = `UPDATE on_active SET status = 1 WHERE id = ?`
             await pool.databaseQuery(connection, changeStatus, id)
 
             // get log on_active history
@@ -126,36 +126,21 @@ const _this = module.exports = {
         })
     },
     // SUPER ADMIN & ADMIN : get history data and on_active only
-    getInitialHistory : (req, res) => {
-        const limit = parseInt(req.query.limit)
+    getParkingHistory : (req, res) => {
+        // check query
+        const limit = parseInt(req.query.limit) || null
+        const company = parseInt(req.query.company) || null
+        const next  = parseInt(req.query.next) || null // last id
+        const prev = parseInt(req.query.prev) || null // first id
 
-        // do authorization to define execption
-        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
-        const execption = company ? `WHERE pk.company_id = ${company}` : ''
+        // define query
+        const queryLimit = limit ? `LIMIT ${limit}` : ''
+        const queryCompany = company ? next || prev ? `AND pk.company_id = ${company}` : `WHERE pk.company_id = ${company}` : ''
+        const queryNext =  next ? `WHERE h.id < ${next} ` : ''
+        const queryPrev = prev ? `WHERE h.id > ${prev} ` : ''
+        const order = prev ? 'ASC' : 'DESC'
 
-        connection.databaseQueryWithErrorHandle(req, async () => {
-            const query = `SELECT h.id, us.username,
-                        DATE_FORMAT(h.enter_date, '%W, %D %M %Y, %H:%i') AS enter_date,
-                        DATE_FORMAT(h.leave_date, '%W, %D %M %Y, %H:%i') AS leave_date, 
-                        h.duration, pk.place_name 
-                        FROM history h
-                        JOIN users us ON h.user_id = us.id
-                        JOIN parking_area pk ON h.area_id = pk.id 
-                        ${execption} ORDER BY h.id DESC LIMIT ?`
-            const result = await connection.databaseQuery(query, limit)
-            
-            // send feedback to client-side
-            res.status(200).send(result)
-        })
-    },
-    getNextHistory : (req, res) => {
-        const id = parseInt(req.query.id)
-        const limit = parseInt(req.query.limit)
-
-        // do authorization to define execption
-        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
-        const execption = company ? `AND pk.company_id = ${company}` : ''
-
+        // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT h.id, us.username,
                         DATE_FORMAT(h.enter_date, '%W, %D %M %Y, %H:%i') AS enter_date,
@@ -164,103 +149,42 @@ const _this = module.exports = {
                         FROM history h
                         JOIN users us ON h.user_id = us.id
                         JOIN parking_area pk ON h.area_id = pk.id
-                        WHERE h.id < ? ${execption}
-                        ORDER BY h.id DESC LIMIT ?`
-            const result = await connection.databaseQuery(query, [id, limit])
-            
+                        ${queryNext}${queryPrev}${queryCompany}
+                        ORDER BY h.id ${order} ${queryLimit}`
+            // console.log(query)
+            const result = await connection.databaseQuery(query)
+
             // send feedback to client-side
             res.status(200).send(result)
         })
     },
-    getPrevHistory : (req, res) => {
-        const id = parseInt(req.query.id)
-        const limit = parseInt(req.query.limit)
+    getParkingOnActive : (req, res) => {
+        // check query
+        const limit = parseInt(req.query.limit) || null
+        const company = parseInt(req.query.company) || null
+        const next  = parseInt(req.query.next) || null // last id
+        const prev = parseInt(req.query.prev) || null // first id
     
-        // do authorization to define execption
-        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
-        const execption = company ? `AND pk.company_id = ${company}` : ''
+        // define query
+        const queryLimit = limit ? `LIMIT ${limit}` : ''
+        const queryCompany = company ? next || prev ? `AND pk.company_id = ${company}` : `WHERE pk.company_id = ${company}` : ''
+        const queryNext =  next ? `WHERE oa.id < ${next} ` : ''
+        const queryPrev = prev ? `WHERE oa.id > ${prev} ` : ''
+        const order = prev ? 'ASC' : 'DESC'
 
+        // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT h.id, us.username, 
-                        DATE_FORMAT(h.enter_date, '%W, %D %M %Y, %H:%i') AS enter_date,
-                        DATE_FORMAT(h.leave_date, '%W, %D %M %Y, %H:%i') AS leave_date, 
-                        h.duration, pk.place_name 
-                        FROM history h
-                        JOIN users us ON h.user_id = us.id
-                        JOIN parking_area pk ON h.area_id = pk.id
-                        WHERE h.id > ? ${execption}
-                        ORDER BY h.id ASC LIMIT ?`
-            const result = await connection.databaseQuery(query, [id, limit])
+            const query = `SELECT oa.id, us.username, 
+                        DATE_FORMAT(oa.enter_date, '%W, %D %M %Y, %H:%i') AS enter_date, 
+                        oa.status, pk.place_name, pk.company_id 
+                        FROM on_active oa
+                        JOIN users us ON oa.user_id = us.id
+                        JOIN parking_area pk ON oa.area_id = pk.id
+                        ${queryNext}${queryPrev}${queryCompany} 
+                        ORDER BY oa.id ${order} ${queryLimit}`
+            // console.log(query)
+            const result = await connection.databaseQuery(query)
             
-            // send feedback to client-side
-            res.status(200).send(result)
-        })
-    },
-    // on active
-    getInitialOnActive : (req, res) => {
-        const limit = parseInt(req.query.limit)
-
-        // do authorization to define execption
-        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
-        const execption = company ? `WHERE pk.company_id = ${company}` : ''
-
-        // DATE_FORMAT(oa.enter_data, %W, %D %M %Y, %H:%i) AS enter_date
-        connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT oa.id, us.username, 
-                        DATE_FORMAT(oa.enter_date, '%W, %D %M %Y, %H:%i') AS enter_date, 
-                        oa.status, pk.place_name, pk.company_id 
-                        FROM on_active oa
-                        JOIN users us ON oa.user_id = us.id
-                        JOIN parking_area pk ON oa.area_id = pk.id
-                        ${execption} ORDER BY oa.id DESC LIMIT ?`
-            const result = await connection.databaseQuery(query, limit)
-
-            // send feedback to client-side
-            res.status(200).send(result)
-        })
-    },
-    getNexOnActive : (req, res) => {
-        const id = parseInt(req.query.id)
-        const limit = parseInt(req.query.limit)
-        
-        // do authorization to define execption
-        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
-        const execption = company ? `AND pk.company_id = ${company}` : ''
-        
-        connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT oa.id, us.username, 
-                        DATE_FORMAT(oa.enter_date, '%W, %D %M %Y, %H:%i') AS enter_date, 
-                        oa.status, pk.place_name, pk.company_id 
-                        FROM on_active oa
-                        JOIN users us ON oa.user_id = us.id
-                        JOIN parking_area pk ON oa.area_id = pk.id
-                        WHERE oa.id < ? ${execption} 
-                        ORDER BY oa.id DESC LIMIT ?`
-            const result = await connection.databaseQuery(query, [id, limit])
-        
-            // send feedback to client-side
-            res.status(200).send(result)
-        })
-    },
-    getPrevOnActive : (req, res) => {
-        const id = parseInt(req.query.id)
-        const limit = parseInt(req.query.limit)
-        
-        // do authorization to define execption
-        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
-        const execption = company ? `AND pk.company_id = ${company}` : ''
-        
-        connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT oa.id, us.username, 
-                        DATE_FORMAT(oa.enter_date, '%W, %D %M %Y, %H:%i') AS enter_date, 
-                        oa.status, pk.place_name, pk.company_id 
-                        FROM on_active oa
-                        JOIN users us ON oa.user_id = us.id
-                        JOIN parking_area pk ON oa.area_id = pk.id
-                        WHERE oa.id > ? ${execption} 
-                        ORDER BY oa.id ASC LIMIT ?`
-            const result = await connection.databaseQuery(query, [id, limit])
-        
             // send feedback to client-side
             res.status(200).send(result)
         })

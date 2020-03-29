@@ -28,62 +28,30 @@ module.exports = {
         })
     },
     // SUPERADMIN and ADMIN : GET all ratings data
-    getInitialRatings : (req, res) => {
-        const limit = parseInt(req.query.limit)
+    getRating : (req, res) => {
+        // check query
+        const limit = parseInt(req.query.limit) || null
+        const company = parseInt(req.query.company) || null
+        const next  = parseInt(req.query.next) || null // last id
+        const prev = parseInt(req.query.prev) || null // first id
+    
+        // define query
+        const queryLimit = limit ? `LIMIT ${limit}` : ''
+        const queryCompany = company ? next || prev ? `AND pk.company_id = ${company}` : `WHERE pk.company_id = ${company}` : ''
+        const queryNext =  next ? `WHERE rt.id < ${next} ` : ''
+        const queryPrev = prev ? `WHERE rt.id > ${prev} ` : ''
+        const order = prev ? 'ASC' : 'DESC'
 
-        // do athorization to define exception
-        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
-        const exception = company ? `WHERE pk.company_id = ${company}` : ''
-
+        // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT rt.id, us.username, rt.rating, rt.message, rt.date, pk.place_name 
-                        FROM ratings rt
-                        JOIN users us ON rt.user_id = us.id
-                        JOIN parking_area pk ON rt.area_id = pk.id
-                        ${exception} ORDER BY rt.id DESC LIMIT ?`
-            const result = await connection.databaseQuery(query, limit)
-
-            // send feedback to client-side
-            res.status(200).send(result)
-        })
-    },
-    getNextRatings : (req, res) => {
-        const id = parseInt(req.query.id)
-        const limit = parseInt(req.query.limit)
-
-        // do athorization to define exception
-        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
-        const exception = company ? `pk.company_id = ${company} AND` : ''
-
-        connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT rt.id, us.username, rt.rating, rt.message, rt.date, pk.place_name 
-                        FROM ratings rt
-                        JOIN users us ON rt.user_id = us.id
-                        JOIN parking_area pk ON rt.area_id = pk.id
-                        WHERE ${exception} rt.id < ?
-                        ORDER BY rt.id DESC LIMIT ?`
-            const result = await connection.databaseQuery(query, [id, limit])
-
-            // send feedback to client-side
-            res.status(200).send(result)
-        })
-    },
-    getPrevRatings : (req, res) => {
-        const id = parseInt(req.query.id)
-        const limit = parseInt(req.query.limit)
-
-        // do athorization to define exception
-        const company = req.query.company === 'null' ? null : parseInt(req.query.company)
-        const exception = company ? `pk.company_id = ${company} AND` : ''
-
-        connection.databaseQueryWithErrorHandle(res, async () => {
-            const query = `SELECT rt.id, us.username, rt.rating, rt.message, rt.date, pk.place_name 
-                        FROM ratings rt
-                        JOIN users us ON rt.user_id = us.id
-                        JOIN parking_area pk ON rt.area_id = pk.id
-                        WHERE ${exception} rt.id > ?
-                        ORDER BY rt.id ASC LIMIT ?`
-            const result = await connection.databaseQuery(query, [id, limit])
+                    FROM ratings rt
+                    JOIN users us ON rt.user_id = us.id
+                    JOIN parking_area pk ON rt.area_id = pk.id
+                    ${queryNext}${queryPrev}${queryCompany}
+                    ORDER BY rt.id ${order} ${queryLimit}`
+            console.log(query)
+            const result = await connection.databaseQuery(query)
 
             // send feedback to client-side
             res.status(200).send(result)

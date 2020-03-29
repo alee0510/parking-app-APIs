@@ -6,11 +6,7 @@ const { rating } = require('../controllers')
 
 // apply our controllers
 router.get('/total', rating.getTotalRating)
-router.get('/data', rating.getInitialRatings)
-router.get('/data/next', rating.getNextRatings)
-router.get('/data/prev', rating.getPrevRatings)
-router.get('/user/get/:id', rating.getRatingByUser)
-router.post('/user/add', rating.addRating)
+router.get('/data', rating.getRating)
 
 // export our routers
 module.exports = router
