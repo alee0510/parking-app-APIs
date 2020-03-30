@@ -50,7 +50,7 @@ module.exports = {
                     JOIN parking_area pk ON rt.area_id = pk.id
                     ${queryNext}${queryPrev}${queryCompany}
                     ORDER BY rt.id ${order} ${queryLimit}`
-            console.log(query)
+            // console.log(query)
             const result = await connection.databaseQuery(query)
 
             // send feedback to client-side

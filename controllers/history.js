@@ -143,8 +143,8 @@ const _this = module.exports = {
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT h.id, us.username,
-                        DATE_FORMAT(h.enter_date, '%W, %D %M %Y, %H:%i') AS enter_date,
-                        DATE_FORMAT(h.leave_date, '%W, %D %M %Y, %H:%i') AS leave_date,  
+                        DATE_FORMAT(h.enter_date, '%W, %d/%m/%y, %H:%i') AS enter_date,
+                        DATE_FORMAT(h.leave_date, '%W, %d/%m/%y, %H:%i') AS leave_date,  
                         h.duration, pk.place_name 
                         FROM history h
                         JOIN users us ON h.user_id = us.id
@@ -175,7 +175,7 @@ const _this = module.exports = {
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT oa.id, us.username, 
-                        DATE_FORMAT(oa.enter_date, '%W, %D %M %Y, %H:%i') AS enter_date, 
+                        DATE_FORMAT(oa.enter_date, '%W, %d/%m/%y, %H:%i') AS enter_date, 
                         oa.status, pk.place_name, pk.company_id 
                         FROM on_active oa
                         JOIN users us ON oa.user_id = us.id
