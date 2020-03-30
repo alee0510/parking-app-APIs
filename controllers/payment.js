@@ -181,13 +181,13 @@ module.exports = {
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT th.id, 
-                    DATE_FORMAT(th.date, '%W, %D %M %Y, %H:%i') AS date,
-                    th.type, th.am  ount, th.user_id, us.username, th.status 
+                    DATE_FORMAT(th.date, '%W, %d/%m/%y, %H:%i') AS date,
+                    th.type, th.amount, th.user_id, us.username, th.status 
                     FROM transaction_history th
                     JOIN users us ON us.id = th.user_id 
                     ${queryNext}${queryPrev}${queryType}
                     ORDER by th.id ${order} ${queryLimit}`
-            console.log(query)
+            // console.log(query)
             const result = await connection.databaseQuery(query)
 
             // send feedback to client-side

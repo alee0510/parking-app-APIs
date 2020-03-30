@@ -29,7 +29,7 @@ module.exports = {
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT * FROM car_brands ${queryNext}${queryPrev}${queryLimit}`
-            console.log(query)
+            // console.log(query)
             const result = await connection.databaseQuery(query)
 
             // send feedback to client-side
@@ -90,7 +90,7 @@ module.exports = {
         // do query
         connection.databaseQueryWithErrorHandle(res, async () => {
             const query = `SELECT * FROM motor_brands ${queryNext}${queryPrev}${queryLimit}`
-            console.log(query)
+            // console.log(query)
             const result = await connection.databaseQuery(query)
 
             // send feedback to client-side
@@ -123,7 +123,6 @@ module.exports = {
             // send feedback to client-side
             res.status(200).send('delete motor brand success.')
         })
-
     },
     // CAR & MOTOR TYPE : get, add, and edit
     getTotalCarType : (req, res) => {
@@ -152,7 +151,7 @@ module.exports = {
             const query = `SELECT ct.id, ct.name, cb.brand, ct.brand_id FROM car_types ct
                         JOIN car_brands cb ON ct.brand_id = cb.id
                         ${queryNext}${queryPrev}${queryLimit}`
-            console.log(query)
+            // console.log(query)
             const result = await connection.databaseQuery(query)
 
             // send feedback to client-side
