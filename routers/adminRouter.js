@@ -5,12 +5,12 @@ const router = require('express').Router()
 const { admin } = require('../controllers')
 
 // apply our controllers
-router.get('/get/users', admin.getUserAccount)
-router.get('/get/profiles/', admin.getUserProfile)
-router.get('/get/total', admin.getTotalUserAccount)
-router.get('/get/roles', admin.getUserRole)
-router.patch('/users/edit/:id', admin.editUserRole)
-router.delete(`/users/delete/:id`, admin.deleteUserAccount)
+router.get('/member/account', admin.getUserAccount)
+router.get('/member/profiles/', admin.getUserProfile)
+router.get('/member/total', admin.getTotalUserAccount)
+router.get('/member/roles', admin.getUserRole)
+router.put('/member/edit/:id', admin.editUserRole)
+router.delete(`/member/delete/:id`, admin.deleteUserAccount)
 
 // export our routers
 module.exports = router

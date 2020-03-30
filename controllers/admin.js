@@ -81,7 +81,7 @@ module.exports = {
             await connection.databaseQuery(query, [req.body, parseInt(req.params.id)])
 
             // send feedback to client-side
-            res.status(200).send('role has been added.')
+            res.status(200).send('role has been edited.')
         })
     },
     // superadmin feature : manage user account

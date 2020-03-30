@@ -13,8 +13,7 @@ module.exports = {
     // SUPERADMIN & ADMIN : get parking area data
     getParkingAreaData : (req, res) => {
         // do authorization to define execption
-        const company = ['null', undefined].includes(req.query.company) ? null 
-                        : parseInt(req.query.company)
+        const company = parseInt(req.query.company) || null
         const execption = company ? `WHERE company_id = ${company}` : ''
 
         connection.databaseQueryWithErrorHandle(res, async () => {
@@ -24,8 +23,6 @@ module.exports = {
                         FROM parking_area pk
                         JOIN partners p ON p.id = pk.company_id ${execption}`
             const data = await connection.databaseQuery(getData)
-            // const get = JSON.parse(data[0].coordinates)
-            // console.log(get.latitude)
 
             // send feedback to client side
             res.status(200).send(data)
