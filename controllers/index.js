@@ -9,6 +9,7 @@ const payment = require('./payment')
 const vehicles = require('./vehicles')
 const parking_area = require('./parking_area')
 const partner = require('./partner')
+const feed = require('./feed')
 
 // export controllers
 module.exports = { 
@@ -21,5 +22,6 @@ module.exports = {
     payment, 
     vehicles, 
     parking_area,
-    partner
+    partner,
+    feed
 }

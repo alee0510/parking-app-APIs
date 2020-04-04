@@ -9,6 +9,7 @@ const paymentRouter = require('./paymentRouter')
 const parkingAreaRouter = require('./parkingAreaRouter')
 const partnerRouter = require('./partnerRouter')
 const mobileRouter = require('./mobileRouter')
+const feedRouter = require('./feedRouter')
 
 // export our routers
 module.exports = { 
@@ -21,5 +22,6 @@ module.exports = {
     paymentRouter,
     parkingAreaRouter,
     partnerRouter,
-    mobileRouter
+    mobileRouter,
+    feedRouter
 }
