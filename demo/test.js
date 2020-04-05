@@ -114,4 +114,6 @@ const data = area.map(item => {
 // console.log(arr.split('/')[3])
 
 let path = 'public/profiles/IMG-1584901066151.jpg'
-console.log(path.slice(7, path.length))
+// console.log(path.slice(7, path.length))
+const date = new Date()
+console.log(`${date.getFullYear()}-${date.getMonth()+1}-01`)

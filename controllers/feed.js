@@ -47,5 +47,8 @@ module.exports = {
             // send feedback to client-side
             res.status(200).send(result)
         })
+    },
+    getHistoryPerProps : (req, res) => {
+        const key = req.query.key || null // day, month. and week
     }
 }
